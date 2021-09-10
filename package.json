@@ -1,0 +1,23 @@
+{
+  "name": "projet6",
+  "version": "1.0.0",
+  "description": "website photo",
+  "main": "accueil.js",
+  "dependencies": {
+    "eslint": "^7.32.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arthurchatelain/projet-6.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arthurchatelain/projet-6/issues"
+  },
+  "homepage": "https://github.com/arthurchatelain/projet-6#readme"
+}
