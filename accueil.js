@@ -1,3 +1,8 @@
+
+const json = require('json-loader!./file.json');
+
+console.log(json);
+
 function BlocPhotographe(portrait, nom, location, phrase, tarif, tags){
     let photographe = document.createElement('section');
     photographe.className = "blocphotographe" ;
@@ -45,9 +50,9 @@ BlocPhotographe("images/photographers/MarcelNikolic.jpg", "Marcel Nikolic", "Ber
 
 /* Fonctionnalitée filtres */
 
-taglist = document.getElementsByClassName("tagclick");
-tagneeded = [];
-tagclicked = [];
+let taglist = document.getElementsByClassName("tagclick");
+let tagneeded = [];
+let tagclicked = [];
 for (let i = 0; i < taglist.length; i++) {
     taglist[i].addEventListener('mouseover', function(){
         taglist[i].style.backgroundColor = '#901C1C';
@@ -119,6 +124,4 @@ function tagmanagement(filtersneeded) {
             }
         }
     }
-    
-    
 }

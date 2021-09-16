@@ -91,7 +91,7 @@ header h1 {
   padding: 5px;
 }
 .blocphotographe .tarif {
-  padding: calc($paddingpresentationtexte - 1px);
+  padding: 5px;
   color: #6b6b6b;
 }
 .blocphotographe .divimg {
@@ -116,6 +116,36 @@ main {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+}
+
+@media (max-width: 1375px) {
+  header .lienlogo {
+    width: 170px;
+  }
+
+  header {
+    padding: 25px 35px;
+  }
+}
+@media (max-width: 1300px) {
+  header .lienlogo {
+    width: 210px;
+  }
+
+  header nav {
+    padding-top: 70px;
+  }
+
+  header {
+    padding: 25px 75px;
+    flex-direction: column;
+  }
+
+  header h1 {
+    position: fixed;
+    right: 5%;
+    top: 32px;
+  }
 }
 
 /*# sourceMappingURL=accueil.css.map */
