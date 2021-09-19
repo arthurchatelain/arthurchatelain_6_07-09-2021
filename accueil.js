@@ -1,34 +1,52 @@
+import data from "./data/data.json"
 
-const json = require('json-loader!./file.json');
-
-console.log(json);
-
-function BlocPhotographe(portrait, nom, location, phrase, tarif, tags){
+function createHeader(){
+    let tags = [];
+    data.photographers.forEach((item)=>{
+        tags = [...tags, ...item.tags]
+    })
+    tags = [... new Set(tags)];
+    var nav = document.createElement('nav');
+    nav.className = "listetags";
+    var header = document.getElementById('header');
+    var titre = document.createElement('h1');
+    titre.textContent = "Nos Photographes";
+    tags.forEach(function(item){
+        var createtag = document.createElement('span');
+        createtag.className = "tag tagclick";
+        createtag.textContent = "#" + item;
+        nav.appendChild(createtag);
+    })
+    header.appendChild(nav);
+    header.appendChild(titre);
+}
+createHeader();
+function BlocPhotographe(number){
     let photographe = document.createElement('section');
     photographe.className = "blocphotographe" ;
     let divimg = document.createElement('div');
     divimg.className = "divimg"; 
     let image = document.createElement('img');
-    image.src = portrait;
+    image.src = './images/photographers/' + data.photographers[number].portrait;
     image.className = "imageportrait"
     divimg.appendChild(image); 
     let prenom = document.createElement('p');
-    prenom.textContent = nom;
+    prenom.textContent = data.photographers[number].name;
     prenom.className = "nom";
     let lieu = document.createElement('p');
-    lieu.textContent = location;
+    lieu.textContent = data.photographers[number].city + ", " + data.photographers[number].country;
     lieu.className = "location";
     let sentence = document.createElement('p');
-    sentence.textContent = phrase;
+    sentence.textContent = data.photographers[number].tagline;
     sentence.className = "phrase";
     let prix = document.createElement('p');
-    prix.textContent = tarif;
+    prix.textContent = data.photographers[number].price + ' €';
     prix.className = "tarif";
     let filtres = document.createElement('nav');
     filtres.className = "tagbypers"
-    for ( let i = 0; i < tags.length; i++) {
+    for ( let i = 0; i < data.photographers[number].tags.length; i++) {
         let tag = document.createElement('span');
-        tag.textContent = tags[i];
+        tag.textContent = "#" + data.photographers[number].tags[i].toLowerCase();
         tag.className = "tag tagf";
         filtres.appendChild(tag);   
     }
@@ -41,12 +59,12 @@ function BlocPhotographe(portrait, nom, location, phrase, tarif, tags){
     document.getElementById('main').appendChild(photographe);
 }
 
-BlocPhotographe("images/photographers/EllieRoseWilkens.jpg", "Ellie-Rose Wikens", "Paris, France", "Travail sur des compositions complexes", "250€/jour", ["#Sport", "#Architecture"] );
-BlocPhotographe("images/photographers/MimiKeel.jpg", "Mimi Keel", "London, UK", "Voir le beau dans le quotidien", "400€/jour", ["#Portraits", "#Events", "#Travel", "#Animals"] );
-BlocPhotographe("images/photographers/TracyGalindo.jpg", "Tracy Galindo", "Montreal, Canada", "Phtographe freelance", "500€/jour", ["#Art", "#Fashion", "#Event"] );
-BlocPhotographe("images/photographers/NabeelBradford.jpg", "Nabeel Bradford", "Mexico city, Mexico", "Je vais toujours de l'avant", "350€/jour", ["#Travel", "#Portraits"] );
-BlocPhotographe("images/photographers/RhodeDubois.jpg", "Rhode Dubois", "Barcelona, Spain", "Créatrice de souvenirs", "375€/jour", ["#Sport", "#Fashion", "#Events", "#Animals"] );
-BlocPhotographe("images/photographers/MarcelNikolic.jpg", "Marcel Nikolic", "Berlin, Germany", "Toujours à la recherche de LA photo", "300€/jour", ["#Travel", "#Architecture"] );
+function creerblocs (nombredephotographes) {
+    for (let i = 0; i < nombredephotographes; i++){
+        BlocPhotographe(i)
+    }
+}
+creerblocs(6)
 
 /* Fonctionnalitée filtres */
 
@@ -61,8 +79,6 @@ for (let i = 0; i < taglist.length; i++) {
             tagclicked[i] = 0;
         }
     })
-}
-for (let i = 0; i < taglist.length; i++) {
     taglist[i].addEventListener('mouseout', function(){
         if (tagclicked[i] != 1) {
         taglist[i].style.backgroundColor = 'white';
@@ -87,16 +103,17 @@ for (let i = 0; i < taglist.length; i++) {
         }
     });
 } 
-let x = 0;
-let r = 0;
+
+// tags classement
+
 function tagmanagement(filtersneeded) {
-    blocfotodel = document.getElementsByClassName('blocphotographe');
-    g = document.getElementsByClassName('tagf');
-    r = 0;
+    let blocfotodel = document.getElementsByClassName('blocphotographe');
+    let g = document.getElementsByClassName('tagf');
+    let r = 0;
     for(let s = 0; s < g.length; s++){
         for(let t = 0; t < filtersneeded.length; t++){
             if (g[s].textContent == filtersneeded[t]){
-                r =1;
+                r = 1;
             }
         }
     }
@@ -107,8 +124,8 @@ function tagmanagement(filtersneeded) {
     }
     else {
         for (let z = 0; z < blocfotodel.length; z++){
-            a = blocfotodel[z].getElementsByClassName('tagf');
-            x = 0;
+            let a = blocfotodel[z].getElementsByClassName('tagf');
+            let x = 0;
             for (let c = 0; c < a.length; c++){
                 for (let d = 0; d < filtersneeded.length; d++){
                    if (a[c].textContent == filtersneeded[d]){
