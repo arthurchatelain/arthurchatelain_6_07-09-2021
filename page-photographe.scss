@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-margin-after: 0;
+    margin-block-end: 0;
+    -webkit-margin-before: 0;
+    margin-block-start: 0;
+    text-decoration: none;
+  }
+  
+$couleurprimary: #901C1C;
+$couleursecondary: #D3573C;
+$couleurtertiary: #6b6b6b;
+
+header {
+    display: flex;
+    flex-direction: column;
+}
+
+#presentation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

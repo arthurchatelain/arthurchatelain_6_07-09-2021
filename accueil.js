@@ -1,5 +1,7 @@
 import data from "./data/data.json"
 
+const nombredephotographes = 6;
+
 function createHeader(){
     let tags = [];
     data.photographers.forEach((item)=>{
@@ -20,7 +22,7 @@ function createHeader(){
     header.appendChild(nav);
     header.appendChild(titre);
 }
-createHeader();
+
 function BlocPhotographe(number){
     let photographe = document.createElement('section');
     photographe.className = "blocphotographe" ;
@@ -64,10 +66,14 @@ function creerblocs (nombredephotographes) {
         BlocPhotographe(i)
     }
 }
-creerblocs(6)
 
-/* Fonctionnalitée filtres */
+// différenciation des pages html
+if (document.getElementById('titre').textContent == "FishEye"){
+    createHeader()
+    creerblocs(nombredephotographes)
+}
 
+// Fonctionnalitée filtres 
 let taglist = document.getElementsByClassName("tagclick");
 let tagneeded = [];
 let tagclicked = [];
@@ -142,3 +148,18 @@ function tagmanagement(filtersneeded) {
         }
     }
 }
+
+// redirection au click
+
+let numerophotographers;
+
+let imageredirection = document.getElementsByClassName('divimg');
+for (let i = 0; i < imageredirection.length; i++) {
+    imageredirection[i].addEventListener('click', function redirection(){
+        window.open('./page-photographe.html', 'blank');
+        numerophotographers = i;
+        let headerpageprincipale = document.getElementById('header');
+        headerpageprincipale.className = numerophotographers;
+    })
+}
+

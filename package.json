@@ -12,7 +12,7 @@
     "webpack-cli": "^4.8.0"
   },
   "scripts": {
-    "build": "webpack --watch --config webpack.config.js && sass --watch Accueil.scss accueil.css",
+    "build": "webpack --watch --config webpack.config.js && sass --watch Accueil.scss accueil.css && sass --watch page-photographe.scss page-photographe.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
