@@ -26,6 +26,7 @@ function createHeader(){
 function BlocPhotographe(number){
     let photographe = document.createElement('section');
     photographe.className = "blocphotographe" ;
+    photographe.setAttribute('data-idPhotographers', data.photographers[number].id)
     let divimg = document.createElement('div');
     divimg.className = "divimg"; 
     let image = document.createElement('img');
@@ -151,15 +152,10 @@ function tagmanagement(filtersneeded) {
 
 // redirection au click
 
-let numerophotographers;
-
-let imageredirection = document.getElementsByClassName('divimg');
-for (let i = 0; i < imageredirection.length; i++) {
-    imageredirection[i].addEventListener('click', function redirection(){
-        window.open('./page-photographe.html', 'blank');
-        numerophotographers = i;
-        let headerpageprincipale = document.getElementById('header');
-        headerpageprincipale.className = numerophotographers;
-    })
-}
+let imageredirection = document.getElementsByClassName('blocphotographe');
+Array.from(imageredirection).forEach(function(element){
+    element.addEventListener('click', function(event){
+        window.open('./page-photographe.html' + '?' + event.currentTarget.getAttribute('data-idphotographers'), 'blank');
+     }, false)
+})
 
