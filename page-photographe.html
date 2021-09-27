@@ -9,6 +9,32 @@
             <a href="accueil.html" class="lienlogo"><img src="images/logo.png" alt="FishEye Home Page" class="imglogo"></a>
         </header>
         <main id="main">
+            <section id="modalbg">
+                <section id="modalcontact">
+                    <form onsubmit="soumissionForm()">
+                        <div class="formData">
+                          <label for="first">Prénom</label>
+                          <input class="text-control" type="text" id="first" name="first" minlength="2"/>
+                        </div>
+                        <div class="formData">
+                            <label for="last">Nom</label>
+                            <input class="text-control" type="text" id="last" name="last" minlength="2"/>
+                          </div>
+                          <div class="formData">
+                            <label for="email">Email</label>
+                            <input class="text-control" type="text" id="email" name="email" minlength="2"/>
+                          </div>
+                          <div class="formData">
+                            <label for="message">Votre message</label>
+                            <textarea class="text-control" rows="4" type="text" id="message" name="message" minlength="2"></textarea>
+                          </div>
+                          <input id="btn-submit" type="submit" class="button" value="Envoyer"/>
+                    </form>
+                    <article id="contenermodaltexte">
+
+                    </article>    
+                </section>
+            </section>
         </main>
         <script type="text/javascript" src="./dist/pagephotographe.bundle.js"></script>
     </body>
