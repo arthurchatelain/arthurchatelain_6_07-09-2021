@@ -8,15 +8,85 @@
   text-decoration: none;
 }
 
+@font-face {
+  font-family: "policegeneral";
+  src: url(Polices/Gilroy-Regular.ttf);
+}
+@font-face {
+  font-family: "policegeneralbold";
+  src: url(Polices/Gilroy-SemiBold.ttf);
+}
+body {
+  padding: 35px 70px;
+}
+
 header {
   display: flex;
-  flex-direction: column;
+  padding-bottom: 30px;
+}
+header .imglogo {
+  width: 220px;
 }
 
 #presentation {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.headerphotographe {
+  background-color: #FAFAFA;
+  padding: 70px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.headerphotographe .tagbypers {
+  position: relative;
+  left: -4px;
+}
+.headerphotographe .nom {
+  color: #D3573C;
+  font-size: xxx-large;
+  padding-bottom: 20px;
+  font-family: policegeneral;
+}
+.headerphotographe .location {
+  color: #901C1C;
+  font-size: large;
+  padding-bottom: 20px;
+  font-family: policegeneralbold;
+}
+.headerphotographe .phrase {
+  padding-bottom: 20px;
+  font-family: policegeneral;
+}
+.headerphotographe .divimg {
+  width: 220px;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 100%;
+  margin-bottom: 15px;
+}
+.headerphotographe nav {
+  display: flex;
+}
+.headerphotographe nav .tags {
+  border-style: solid;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin: 0px 4px;
+  border-width: 1px;
+  color: #901C1C;
+  border-color: #bbbaba;
+  font-weight: bold;
+  cursor: context-menu;
+  font-family: policegeneral;
+}
+
+.imageportrait {
+  width: 100%;
 }
 
 /*# sourceMappingURL=page-photographe.css.map */

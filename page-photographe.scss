@@ -11,10 +11,29 @@
 $couleurprimary: #901C1C;
 $couleursecondary: #D3573C;
 $couleurtertiary: #6b6b6b;
+$paddingheader: 70px;
+$paddingpresentationtexte: 20px;
+
+@font-face {
+    font-family: 'policegeneral';
+    src: url(Polices/Gilroy-Regular.ttf);
+}
+
+@font-face {
+    font-family: 'policegeneralbold';
+    src: url(Polices/Gilroy-SemiBold.ttf);
+}
+
+body {
+    padding: 35px 70px;
+}
 
 header {
     display: flex;
-    flex-direction: column;
+    padding-bottom: 30px;
+    .imglogo {
+        width: 220px;
+      }
 }
 
 #presentation {
@@ -22,3 +41,56 @@ header {
     flex-direction: row;
     justify-content: space-between;
 }
+.headerphotographe {
+    background-color: #FAFAFA;
+    padding: $paddingheader;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    .tagbypers {
+        position: relative;
+        left: -4px;
+    }
+    .nom {
+        color: $couleursecondary;
+        font-size: xxx-large;
+        padding-bottom: $paddingpresentationtexte;
+        font-family: policegeneral;
+    }
+    .location {
+        color: $couleurprimary;
+        font-size: large;
+        padding-bottom: $paddingpresentationtexte;
+        font-family: policegeneralbold;
+    }
+    .phrase {
+        padding-bottom: $paddingpresentationtexte;
+        font-family: policegeneral;
+    }
+    .divimg {
+    width: 220px;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 100%;
+    margin-bottom: 15px; 
+    }
+    nav {
+      display: flex;
+      .tags {
+        border-style: solid;
+        padding: 2px 8px;
+        border-radius: 20px;
+        margin: 0px 4px;
+        border-width: 1px;
+        color: #901C1C;
+        border-color: #bbbaba;
+        font-weight: bold;
+        cursor: context-menu;
+        font-family: policegeneral;
+      }
+    }
+  }
+  .imageportrait {
+    width: 100%;
+  }
