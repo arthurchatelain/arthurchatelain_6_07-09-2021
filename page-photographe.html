@@ -3,12 +3,22 @@
        <title id="titre">FishEye-page-photographe</title>
        <meta charset="utf-8">
        <link rel="stylesheet" type="text/css" href="page-photographe.css"  />
+       <script src="https://kit.fontawesome.com/5b7dac67c1.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <header id="header">
             <a href="accueil.html" class="lienlogo"><img src="images/logo.png" alt="FishEye Home Page" class="imglogo"></a>
         </header>
         <main id="main">
+          <section id="headermain"></section>
+          <section id="modalimagebg">
+            <div id="divmodalimage">
+              <img id="imagephotoactuel" src="" alt="">
+              <i class="fas fa-chevron-left previous"></i>
+              <i class="fas fa-chevron-right next"></i>
+              <span class="modalimageclose"></span>
+            </div>
+          </section>
             <section id="modalbg">
                 <section id="modalcontact">
                     <form onsubmit="soumissionForm()">
@@ -34,6 +44,9 @@
 
                     </article>    
                 </section>
+            </section>
+            <section id="listephotos">
+
             </section>
         </main>
         <script type="text/javascript" src="./dist/pagephotographe.bundle.js"></script>

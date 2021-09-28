@@ -10,6 +10,8 @@ for(let i = 0; i < data.photographers.length; i++) {
     }
 }
 
+let prenomduphotographe = data.photographers[numeroduphotographe].name.split(" ")[0];
+
 function HeaderPhotographe(number){
     let photographe = document.createElement('section');
     photographe.className = "headerphotographe" ;
@@ -52,7 +54,7 @@ function HeaderPhotographe(number){
     articlephotographe.appendChild(boutoncontact);
     photographe.appendChild(articlephotographe);
     photographe.appendChild(divimg);
-    document.getElementById('main').appendChild(photographe);
+    document.getElementById('headermain').appendChild(photographe);
     let modalmenu = document.createElement('div');
     modalmenu.className = 'modalmenu';
     let modaltitre = document.createElement('h1');
@@ -67,22 +69,27 @@ function HeaderPhotographe(number){
     modalnom.textContent = data.photographers[number].name;
     document.getElementById('contenermodaltexte').appendChild(modalmenu);
     document.getElementById('contenermodaltexte').appendChild(modalnom);
-
 }
 
 HeaderPhotographe(numeroduphotographe);
 
+    
 // fonctionalités modals 
 
 let modalbg = document.getElementById('modalbg');
 let openmodal = document.querySelectorAll(".openmodal");
 let fermerModal = document.querySelectorAll(".modalclose");
+let fermerModalImage = document.querySelectorAll(".modalimageclose");
+let modalimagebg = document.getElementById('modalimagebg');
 
 function launchModal() {
     modalbg.style.display = "flex";
 }
 function CloseModal() {
     modalbg.style.display = "none";
+}
+function CloseModalImage() {
+    modalimagebg.style.display = "none";
 }
 function submit () {
     console.log("Prénom : " + document.getElementById('first').value);
@@ -93,9 +100,155 @@ function submit () {
 }
 openmodal.forEach((btn) => btn.addEventListener("click", launchModal));
 fermerModal.forEach((btn) => btn.addEventListener("click", CloseModal));
+fermerModalImage.forEach((btn) => btn.addEventListener("click", CloseModalImage));
 
 document.getElementById('btn-submit').addEventListener('click', function (e) {
     e.preventDefault();
     submit();   
   })
+
+let orderphoto = 0;
+
+//  creation bloc principal
+
+data.media.forEach((item)=>{
+    if(item.photographerId == idduphotographe){
+        orderphoto += 1;
+        let blocphoto = document.createElement('article');
+        blocphoto.className = "blocphoto";
+        blocphoto.style.order = orderphoto;
+        let divimgblocphoto = document.createElement('div');
+        divimgblocphoto.className = "divimgblocphoto";
+        if (item.image != undefined){
+            let imgblocphoto = document.createElement('img');
+            imgblocphoto.src = './images/' + prenomduphotographe + '/' + item.image;
+            imgblocphoto.className = 'imgbloc imgblocphoto';
+            imgblocphoto.setAttribute('id', item.id);
+            divimgblocphoto.appendChild(imgblocphoto);
+            var img = new Image();
+            img.onload = function() {
+                let imgwidth = this.width;
+                let imgheight = this.height;
+                let ratio = imgwidth / imgheight;
+                let pourcentagezoom = ratio * 100;
+                if (imgwidth > imgheight){
+                    imgblocphoto.style.width = pourcentagezoom + '%';
+                }
+            }
+            img.src = './images/' + prenomduphotographe + '/' + item.image;
+        }
+        else {
+            let imgvideoblocphoto = document.createElement('img');
+            imgvideoblocphoto.src = './images/' + prenomduphotographe + '/' +item.video.replace('mp4','jpg');
+            imgvideoblocphoto.className = 'imgbloc imgvideoblocphoto';
+            imgvideoblocphoto.setAttribute('id', item.id);
+            divimgblocphoto.appendChild(imgvideoblocphoto);
+            var img = new Image();
+            img.onload = function() {
+                let imgwidth = this.width;
+                let imgheight = this.height;
+                let ratio = imgwidth / imgheight;
+                let pourcentagezoom = ratio * 100;
+                if (imgwidth > imgheight){
+                    imgvideoblocphoto.style.width = pourcentagezoom + '%';
+                }
+            }
+            img.src = './images/' + prenomduphotographe + '/' +item.video.replace('mp4','jpg');
+        }
+        let menuphoto = document.createElement('article');
+        menuphoto.className = 'menuphoto';
+        let nomphoto = document.createElement('p');
+        nomphoto.className = 'nomphoto';
+        nomphoto.textContent = item.title;
+        let divlikes = document.createElement('div');
+        divlikes.className = 'divlikes';
+        let nblikes = document.createElement('p');
+        nblikes.className = 'nblikes';
+        nblikes.textContent = item.likes;
+        let like = document.createElement('i');
+        like.className = "far fa-heart iconecoeurclick";
+        like.setAttribute('testclick', 'notclicked'); 
+        divlikes.appendChild(nblikes);
+        divlikes.appendChild(like);
+        menuphoto.appendChild(nomphoto);
+        menuphoto.appendChild(divlikes);
+        blocphoto.appendChild(divimgblocphoto);
+        blocphoto.appendChild(menuphoto)
+        document.getElementById('listephotos').appendChild(blocphoto);
+    }
+})    
+
+// fonctionnalités likes 
+
+let like_a_incrementer = document.getElementsByClassName('nblikes');
+let boutonsjaime = document.getElementsByClassName('iconecoeurclick');
+for (let i = 0; i < boutonsjaime.length; i++){
+    boutonsjaime[i].addEventListener('click', function(){
+        if (boutonsjaime[i].getAttribute('testclick') == "notclicked"){
+            let nombreaugmenter = parseInt(like_a_incrementer[i].textContent) + 1;
+            like_a_incrementer[i].textContent = nombreaugmenter;
+            boutonsjaime[i].setAttribute('testclick', 'clicked')
+            boutonsjaime[i].style.fontWeight = '800';
+        }
+        else {
+            let nombrediminuer = parseInt(like_a_incrementer[i].textContent) - 1;
+            like_a_incrementer[i].textContent = nombrediminuer;
+            boutonsjaime[i].setAttribute('testclick', 'notclicked')
+            boutonsjaime[i].style.fontWeight = '400';
+        }
+        revisionNombreDeJaimes()
+    });
+}
+
+// création banière
+
+let banfoot = document.createElement('div');
+let banfootleft = document.createElement('div');
+banfootleft.className = 'banfootleft';
+banfoot.className = 'banfoot';
+let nombredejaimetotaletexte = document.createElement('p')
+let nombredejaimetotal = 0;
+nombredejaimetotaletexte.setAttribute('id', 'nombredejaimetotaltexte')
+let array = document.getElementsByClassName('nblikes');
+for(let i = 0; i < array.length; i++){
+    nombredejaimetotal += parseInt(array[i].textContent);
+}
+let coeurnombredejaimetotale = document.createElement('i');
+coeurnombredejaimetotale.className = 'far fa-heart coeurjaimestotal'
+nombredejaimetotaletexte.textContent = nombredejaimetotal;
+let banfootright = document.createElement('p');
+banfootright.className = 'prixduphotographe';
+banfootright.textContent = data.photographers[numeroduphotographe].price + '€ / jour'
+banfootleft.appendChild(nombredejaimetotaletexte);
+banfootleft.appendChild(coeurnombredejaimetotale);
+banfoot.appendChild(banfootleft);
+banfoot.appendChild(banfootright);
+document.getElementById('main').appendChild(banfoot);
+
+function revisionNombreDeJaimes(){
+    let tableau = document.getElementsByClassName('nblikes');
+    let nombredejaimetotaletexterevision = document.getElementById('nombredejaimetotaltexte');
+    let nombredejaimetotalrevision = 0;
+    for(let i = 0; i < tableau.length; i++){
+        nombredejaimetotalrevision += parseInt(tableau[i].textContent);
+    }
+    nombredejaimetotaletexterevision.textContent = nombredejaimetotalrevision;
+}
+
+// fonctionnalité modal affichage de photo une à une 
+
+let blocphotounique = document.getElementsByClassName('imgbloc');
+let imagephotoactuel = document.getElementById('imagephotoactuel');
+let pointeuractuel;
+for (let i = 0; i < blocphotounique.length; i++){
+    blocphotounique[i].addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        modalimagebg.style.display = "flex";
+        imagephotoactuel.src = event.target.src;
+        pointeuractuel = i;
+    })
+}
+
+// clique previous next
 

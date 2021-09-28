@@ -227,3 +227,134 @@ textarea:focus, input:focus {
     outline: none;
     background-color: $couleurprimary;
 }
+
+.blocphoto {
+    width: calc(100% / 3 - 80px);
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .divimgblocphoto {
+        width: 300px;
+        height: 300px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        img {
+            width: 100%;
+            height: fit-content;
+        }
+    }
+    .menuphoto {
+        width: 300px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-top: 15px;
+        font-family: policegeneralmedium;
+        color: #901C1C;
+        font-size: large;
+        padding-left: 2px;
+        padding-right: 2px;
+        .divlikes {
+            display: flex;
+            flex-direction: row;
+        }
+        .nblikes {
+            padding-right: 10px;
+        }
+        i {
+            position: relative;
+            top: 2.65px;
+        }
+    }
+}
+#listephotos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 150px;
+}
+
+.banfoot {
+    display: flex;
+    flex-direction: row;
+    background-color: $couleurquatre;
+    justify-content: space-between;
+    font-family: policegeneralbold;
+    font-size: large;
+    padding: 20px 30px;
+    width: 25%;
+    position: fixed;
+    right: 40px;
+    bottom: 0px;
+    border-radius: 7px 7px 0px 0px;
+    .banfootleft {
+        display: flex;
+        flex-direction: row;
+    }
+    .coeurjaimestotal {
+        padding-left: 10px;
+        position: relative;
+        top: 3.50px;
+        font-weight: 800;
+    }
+}
+#modalimagebg {
+    display: none;
+    position: fixed;
+    padding-left: 135px;
+    padding-right: 135px;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, 1);
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: calc(100% - 270px);
+    .previous {
+        position: absolute;
+        top: 50%;
+        left: 0px;
+        font-size: xxx-large;
+        padding-left: 65px;
+        color: $couleurprimary;
+    }
+    .next {
+        position: absolute;
+        top: 50%;
+        right: 0px;
+        font-size: xxx-large;
+        padding-right: 65px;
+        color: $couleurprimary;
+    }
+}
+.modalimageclose::after, .modalimageclose::before {
+    position: absolute;
+    top: 70px;
+    right: 70px;
+    content: " ";
+    height: 42px;
+    width: 6px;
+    background-color: $couleurprimary;
+}
+
+.modalimageclose::after {
+    transform: rotate(45deg);
+}
+.modalimageclose::before {
+    transform: rotate(-45deg);
+}
+
+.modalimageclose:hover {
+    cursor: pointer; 
+}
+img#imagephotoactuel {
+    width: 100%;
+    height: 100%;
+}
