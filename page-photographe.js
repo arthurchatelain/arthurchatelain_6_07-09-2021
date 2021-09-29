@@ -123,6 +123,7 @@ data.media.forEach((item)=>{
             let imgblocphoto = document.createElement('img');
             imgblocphoto.src = './images/' + prenomduphotographe + '/' + item.image;
             imgblocphoto.className = 'imgbloc imgblocphoto';
+            imgblocphoto.setAttribute('video', 'no');
             imgblocphoto.setAttribute('id', item.id);
             divimgblocphoto.appendChild(imgblocphoto);
             var img = new Image();
@@ -141,6 +142,7 @@ data.media.forEach((item)=>{
             let imgvideoblocphoto = document.createElement('img');
             imgvideoblocphoto.src = './images/' + prenomduphotographe + '/' +item.video.replace('mp4','jpg');
             imgvideoblocphoto.className = 'imgbloc imgvideoblocphoto';
+            imgvideoblocphoto.setAttribute('video', 'yes')
             imgvideoblocphoto.setAttribute('id', item.id);
             divimgblocphoto.appendChild(imgvideoblocphoto);
             var img = new Image();
@@ -239,16 +241,97 @@ function revisionNombreDeJaimes(){
 
 let blocphotounique = document.getElementsByClassName('imgbloc');
 let imagephotoactuel = document.getElementById('imagephotoactuel');
+let textephotoactuel = document.getElementById('textephotoactuel');
+let nomphotoactuel = document.getElementsByClassName('nomphoto');
+let videoactuelle = document.getElementById('videoactuelle');
 let pointeuractuel;
+let next = document.getElementById('next');
+let previous = document.getElementById('previous');
 for (let i = 0; i < blocphotounique.length; i++){
     blocphotounique[i].addEventListener('click', function(event){
         event.preventDefault();
         event.stopPropagation();
         modalimagebg.style.display = "flex";
         imagephotoactuel.src = event.target.src;
+        imagephotoactuel.style.height = window.innerHeight - 100;
+        textephotoactuel.textContent = nomphotoactuel[i].textContent;
         pointeuractuel = i;
+        if (pointeuractuel == 0){
+            previous.style.display = "none";
+        }
+        else {
+            previous.style.display = "flex";
+        }
+        if (pointeuractuel == blocphotounique.length - 1){
+            next.style.display = "none";
+        }
+        else {
+            next.style.display = "flex";
+        }
+        if(blocphotounique[i].getAttribute('video') == "yes" ){
+            imagephotoactuel.src = "";
+            imagephotoactuel.style.display = "none";
+            videoactuelle.style.display = "flex";
+            videoactuelle.src = event.target.src.replace('jpg', 'mp4')
+            videoactuelle.style.height = window.innerHeight - 100;
+        }
+        if(blocphotounique[i].getAttribute('video') == "no" ){
+            imagephotoactuel.src = event.target.src;
+            imagephotoactuel.style.display = "flex";
+            videoactuelle.style.display = "none";
+            imagephotoactuel.style.height = window.innerHeight - 100;
+        }
     })
 }
 
 // clique previous next
 
+next.addEventListener('click', function(event){
+    event.stopPropagation();
+    event.preventDefault();
+    if (blocphotounique[pointeuractuel + 1].getAttribute('video') == "no"){
+        imagephotoactuel.src = blocphotounique[pointeuractuel + 1].src;
+        imagephotoactuel.style.display = "flex";
+        videoactuelle.style.display = "none";
+        imagephotoactuel.style.height = window.innerHeight - 100;
+    }
+    if (blocphotounique[pointeuractuel + 1].getAttribute('video') == "yes"){
+        imagephotoactuel.src = "";
+        videoactuelle.src = blocphotounique[pointeuractuel + 1].src.replace('jpg', 'mp4')
+        imagephotoactuel.style.display = "none";
+        videoactuelle.style.display = "flex";
+        videoactuelle.style.height = window.innerHeight - 100;
+    }
+    textephotoactuel.textContent = nomphotoactuel[pointeuractuel + 1].textContent;
+    pointeuractuel += 1;
+    previous.style.display = "flex";
+    if (pointeuractuel == (blocphotounique.length - 1)){
+        next.style.display = "none";
+    }
+})
+
+previous.addEventListener('click', function(event){
+    event.stopPropagation();
+    event.preventDefault();
+    if (blocphotounique[pointeuractuel - 1].getAttribute('video') == "no"){
+        imagephotoactuel.src = blocphotounique[pointeuractuel - 1].src;
+        imagephotoactuel.style.display = "flex";
+        videoactuelle.style.display = "none";
+        imagephotoactuel.style.height = window.innerHeight - 100;
+    }
+    if (blocphotounique[pointeuractuel - 1].getAttribute('video') == "yes"){
+        imagephotoactuel.src = "";
+        videoactuelle.src = blocphotounique[pointeuractuel - 1].src.replace('jpg', 'mp4')
+        imagephotoactuel.style.display = "none";
+        videoactuelle.style.display = "flex";
+        videoactuelle.style.height = window.innerHeight - 100;
+    }
+    imagephotoactuel.src = blocphotounique[pointeuractuel - 1].src;
+    textephotoactuel.textContent = nomphotoactuel[pointeuractuel - 1].textContent;
+    imagephotoactuel.style.height = window.innerHeight - 100; 
+    pointeuractuel -= 1;
+    next.style.display = "flex";
+    if (pointeuractuel == 0){
+        previous.style.display = "none";
+    }
+})

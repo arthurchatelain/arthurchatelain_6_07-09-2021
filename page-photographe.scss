@@ -111,6 +111,7 @@ header {
       color: white;
       font-size: medium;
       height: max-content;
+      cursor: pointer;
   }
 
   .articlephotographe {
@@ -317,7 +318,7 @@ textarea:focus, input:focus {
     justify-content: center;
     height: 100%;
     width: calc(100% - 270px);
-    .previous {
+    #previous {
         position: absolute;
         top: 50%;
         left: 0px;
@@ -325,7 +326,7 @@ textarea:focus, input:focus {
         padding-left: 65px;
         color: $couleurprimary;
     }
-    .next {
+    #next {
         position: absolute;
         top: 50%;
         right: 0px;
@@ -354,7 +355,18 @@ textarea:focus, input:focus {
 .modalimageclose:hover {
     cursor: pointer; 
 }
-img#imagephotoactuel {
-    width: 100%;
-    height: 100%;
+#divmodalimage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#textephotoactuel {
+    font-family: policegeneral;
+    font-size: x-large;
+    padding-top: 15px;
+    align-self: flex-start;
+}
+#videoactuelle {
+    display: none;
 }
