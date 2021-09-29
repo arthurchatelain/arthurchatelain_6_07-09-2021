@@ -92,10 +92,10 @@ function CloseModalImage() {
     modalimagebg.style.display = "none";
 }
 function submit () {
-    console.log("Prénom : " + document.getElementById('first').value);
-    console.log("Nom : " + document.getElementById('last').value);
-    console.log("Email : " + document.getElementById('email').value);
-    console.log("Message : " + document.getElementById('message').value);
+("Prénom : " + document.getElementById('first').value);
+("Nom : " + document.getElementById('last').value);
+("Email : " + document.getElementById('email').value);
+("Message : " + document.getElementById('message').value);
     modalbg.style.display = "none";
 }
 openmodal.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -113,9 +113,9 @@ let orderphoto = 0;
 
 data.media.forEach((item)=>{
     if(item.photographerId == idduphotographe){
-        orderphoto += 1;
         let blocphoto = document.createElement('article');
         blocphoto.className = "blocphoto";
+        blocphoto.setAttribute('date', item.date)
         blocphoto.style.order = orderphoto;
         let divimgblocphoto = document.createElement('div');
         divimgblocphoto.className = "divimgblocphoto";
@@ -177,6 +177,7 @@ data.media.forEach((item)=>{
         blocphoto.appendChild(divimgblocphoto);
         blocphoto.appendChild(menuphoto)
         document.getElementById('listephotos').appendChild(blocphoto);
+        orderphoto += 1;
     }
 })    
 
@@ -239,6 +240,7 @@ function revisionNombreDeJaimes(){
 
 // fonctionnalité modal affichage de photo une à une 
 
+let blocphoto = document.getElementsByClassName('blocphoto')
 let blocphotounique = document.getElementsByClassName('imgbloc');
 let imagephotoactuel = document.getElementById('imagephotoactuel');
 let textephotoactuel = document.getElementById('textephotoactuel');
@@ -255,7 +257,7 @@ for (let i = 0; i < blocphotounique.length; i++){
         imagephotoactuel.src = event.target.src;
         imagephotoactuel.style.height = window.innerHeight - 100;
         textephotoactuel.textContent = nomphotoactuel[i].textContent;
-        pointeuractuel = i;
+        pointeuractuel = parseInt(blocphoto[i].style.order);
         if (pointeuractuel == 0){
             previous.style.display = "none";
         }
@@ -289,20 +291,23 @@ for (let i = 0; i < blocphotounique.length; i++){
 next.addEventListener('click', function(event){
     event.stopPropagation();
     event.preventDefault();
-    if (blocphotounique[pointeuractuel + 1].getAttribute('video') == "no"){
-        imagephotoactuel.src = blocphotounique[pointeuractuel + 1].src;
+    let findvaleurnext = Array.from(blocphoto).find(function(element){
+        return element.style.order == pointeuractuel + 1;
+    })
+    if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "no"){
+        imagephotoactuel.src = findvaleurnext.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
         videoactuelle.style.display = "none";
         imagephotoactuel.style.height = window.innerHeight - 100;
     }
-    if (blocphotounique[pointeuractuel + 1].getAttribute('video') == "yes"){
+    if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "yes"){
         imagephotoactuel.src = "";
-        videoactuelle.src = blocphotounique[pointeuractuel + 1].src.replace('jpg', 'mp4')
+        videoactuelle.src = findvaleurnext.firstChild.firstChild.src.replace('jpg', 'mp4')
         imagephotoactuel.style.display = "none";
         videoactuelle.style.display = "flex";
         videoactuelle.style.height = window.innerHeight - 100;
     }
-    textephotoactuel.textContent = nomphotoactuel[pointeuractuel + 1].textContent;
+    textephotoactuel.textContent = findvaleurnext.lastChild.firstChild.textContent;
     pointeuractuel += 1;
     previous.style.display = "flex";
     if (pointeuractuel == (blocphotounique.length - 1)){
@@ -313,21 +318,23 @@ next.addEventListener('click', function(event){
 previous.addEventListener('click', function(event){
     event.stopPropagation();
     event.preventDefault();
-    if (blocphotounique[pointeuractuel - 1].getAttribute('video') == "no"){
-        imagephotoactuel.src = blocphotounique[pointeuractuel - 1].src;
+    let findvaleurprevious = Array.from(blocphoto).find(function(element){
+    return element.style.order == pointeuractuel - 1;
+    })
+    if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "no"){
+        imagephotoactuel.src = findvaleurprevious.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
         videoactuelle.style.display = "none";
         imagephotoactuel.style.height = window.innerHeight - 100;
     }
-    if (blocphotounique[pointeuractuel - 1].getAttribute('video') == "yes"){
+    if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "yes"){
         imagephotoactuel.src = "";
-        videoactuelle.src = blocphotounique[pointeuractuel - 1].src.replace('jpg', 'mp4')
+        videoactuelle.src = findvaleurprevious.firstChild.firstChild.src.replace('jpg', 'mp4')
         imagephotoactuel.style.display = "none";
         videoactuelle.style.display = "flex";
         videoactuelle.style.height = window.innerHeight - 100;
     }
-    imagephotoactuel.src = blocphotounique[pointeuractuel - 1].src;
-    textephotoactuel.textContent = nomphotoactuel[pointeuractuel - 1].textContent;
+    textephotoactuel.textContent = findvaleurprevious.lastChild.firstChild.textContent;
     imagephotoactuel.style.height = window.innerHeight - 100; 
     pointeuractuel -= 1;
     next.style.display = "flex";
@@ -335,3 +342,105 @@ previous.addEventListener('click', function(event){
         previous.style.display = "none";
     }
 })
+
+// trie fonctionalités 
+
+let triechoix = document.getElementById('triechoix');
+let choixactuel = document.getElementById('choixactuel');
+let trieactuel = document.getElementById('trieactuel');
+let chevronup = document.getElementById('chevronup');
+choixactuel.addEventListener('click', function(event){
+    event.preventDefault();
+    event.stopPropagation();
+    triechoix.style.display = "flex";
+    choixactuel.style.display = "none";
+})
+chevronup.addEventListener('click', function(event){
+    event.preventDefault();
+    event.stopPropagation();
+    triechoix.style.display = "none";
+    choixactuel.style.display = "flex";
+})
+
+// trie algorythme par titre 
+
+let listephotos = document.getElementById('listephotos');
+let classementnomphotos = [];
+let popularite = document.getElementById('popularite');
+let titre = document.getElementById('titrechoix');
+let date = document.getElementById('date');
+
+function compare(x, y) {
+    return x - y;
+}
+
+popularite.addEventListener('click', function(){
+    for(let i=0; i < blocphoto.length; i++) {
+        classementnomphotos[i] = parseInt(listephotos.children[i].lastChild.lastChild.firstChild.textContent);
+    }
+    classementnomphotos.sort(compare).reverse();
+    classementnomphotos.forEach(function (valeur, index){
+        for(let i=0; i < blocphoto.length; i++){
+            if(blocphoto[i].lastChild.lastChild.firstChild.textContent == valeur){
+                blocphoto[i].style.order = index;
+            }
+        }
+    })
+    trieactuel.textContent = "Popularité";
+    document.getElementById('triechoix').style.display = "none"; 
+    document.getElementById('choixactuel').style.display = "flex";
+    pasdedouble();
+});
+
+titre.addEventListener('click', function(){
+    for(let i=0; i < blocphoto.length; i++) {
+        classementnomphotos[i] = listephotos.children[i].lastChild.firstChild.textContent;
+    }
+    classementnomphotos.sort();
+    classementnomphotos.forEach(function (valeur, index){
+        for(let i=0; i < blocphoto.length; i++){
+            if(blocphoto[i].lastChild.firstChild.textContent == valeur){
+                blocphoto[i].style.order = index;
+            }
+        }
+    })
+    trieactuel.textContent = "Titre"; 
+    document.getElementById('triechoix').style.display = "none"; 
+    document.getElementById('choixactuel').style.display = "flex";
+    pasdedouble();
+});
+
+date.addEventListener('click', function(){
+    for(let i=0; i < blocphoto.length; i++) {
+        classementnomphotos[i] = listephotos.children[i].getAttribute('date').replace('-', '').replace('-', '');
+    }
+    classementnomphotos.sort();
+    classementnomphotos.forEach(function (valeur, index){
+        for(let i=0; i < blocphoto.length; i++){
+            if(blocphoto[i].getAttribute('date').replace('-', '').replace('-', '') == valeur){
+                blocphoto[i].style.order = index;
+            }
+        }
+    })
+    trieactuel.textContent = "Date"; 
+    document.getElementById('triechoix').style.display = "none"; 
+    document.getElementById('choixactuel').style.display = "flex";
+    pasdedouble();
+});
+   
+function pasdedouble(){
+    let tableauverif = [];
+    for(let i=0; i < listephotos.children.length; i++){
+        tableauverif[i] = parseInt(listephotos.children[i].style.order);
+    }
+    let doublons = parseInt(tableauverif.filter((e, i, a) => a.indexOf(e) !== i));
+    while(doublons != -1){
+        blocphoto[tableauverif.indexOf(doublons)].style.order = blocphoto[tableauverif.indexOf(doublons)].style.order - 1;
+        for(let i=0; i < listephotos.children.length; i++){
+            tableauverif[i] = parseInt(listephotos.children[i].style.order);
+        }
+        doublons = parseInt(tableauverif.filter((e, i, a) => a.indexOf(e) !== i));
+    }
+}
+
+

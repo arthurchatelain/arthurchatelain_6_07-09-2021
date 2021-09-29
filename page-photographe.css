@@ -280,7 +280,7 @@ textarea:focus, input:focus {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding-top: 150px;
+  padding-top: 40px;
 }
 
 .banfoot {
@@ -378,6 +378,62 @@ textarea:focus, input:focus {
 
 #videoactuelle {
   display: none;
+}
+
+#trie {
+  padding-top: 90px;
+  display: flex;
+  flex-direction: row;
+  font-family: policegeneralbold;
+  font-size: larger;
+  position: relative;
+}
+
+#textetrie {
+  padding-right: 40px;
+  padding-left: 15px;
+  position: relative;
+  top: 15px;
+}
+
+#triechoix {
+  display: none;
+  flex-direction: column;
+  background-color: #901C1C;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 0px 15px;
+  position: absolute;
+  left: 130px;
+}
+#triechoix .choix {
+  border: none;
+  background-color: #901C1C;
+  padding: 15px 10px;
+  color: white;
+}
+#triechoix #chevronup {
+  padding-left: 25px;
+}
+#triechoix #popularite, #triechoix #date {
+  border-bottom-color: white;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+}
+
+#choixactuel {
+  background-color: #901C1C;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  left: 130px;
+}
+#choixactuel #trieactuel {
+  padding-right: 25px;
 }
 
 /*# sourceMappingURL=page-photographe.css.map */
