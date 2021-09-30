@@ -159,3 +159,11 @@ Array.from(imageredirection).forEach(function(element){
      }, false)
 })
 
+window.addEventListener('scroll', function(event){
+    if(window.scrollY == 0){
+        document.getElementById('ancreretour').style.display = 'none';
+    }
+    else if(window.scrollY > 0){
+        document.getElementById('ancreretour').style.display = 'block';
+    }
+})

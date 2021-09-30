@@ -186,7 +186,7 @@ data.media.forEach((item)=>{
 let like_a_incrementer = document.getElementsByClassName('nblikes');
 let boutonsjaime = document.getElementsByClassName('iconecoeurclick');
 for (let i = 0; i < boutonsjaime.length; i++){
-    boutonsjaime[i].addEventListener('click', function(){
+    boutonsjaime[i].addEventListener('click', function(event){
         if (boutonsjaime[i].getAttribute('testclick') == "notclicked"){
             let nombreaugmenter = parseInt(like_a_incrementer[i].textContent) + 1;
             like_a_incrementer[i].textContent = nombreaugmenter;
@@ -200,7 +200,31 @@ for (let i = 0; i < boutonsjaime.length; i++){
             boutonsjaime[i].style.fontWeight = '400';
         }
         revisionNombreDeJaimes()
-    });
+        if(document.getElementById('trieactuel').textContent = 'Popularité'){
+                for(let i=0; i < blocphoto.length; i++) {
+                    classementnomphotos[i] = parseInt(listephotos.children[i].lastChild.lastChild.firstChild.textContent);
+                }
+                classementnomphotos.sort(compare).reverse();
+                classementnomphotos.forEach(function (valeur, index){
+                    for(let i=0; i < blocphoto.length; i++){
+                        if(blocphoto[i].lastChild.lastChild.firstChild.textContent == valeur){
+                            blocphoto[i].style.order = index;
+                        }
+                    }
+                })
+                trieactuel.textContent = "Popularité";
+                document.getElementById('triechoix').style.display = "none"; 
+                document.getElementById('choixactuel').style.display = "flex";
+                pasdedouble();
+                popularite.style.order = 0;
+                titre.style.order = 2;
+                date.style.order = 1;
+                document.getElementById('popularite').classList.remove('choixinverse');
+                document.getElementById('date').classList.remove('choixinverse');
+                location.href= '#' + event.path[3].firstChild.firstChild.getAttribute('id');
+            }
+        }
+    );
 }
 
 // création banière
@@ -255,7 +279,6 @@ for (let i = 0; i < blocphotounique.length; i++){
         event.stopPropagation();
         modalimagebg.style.display = "flex";
         imagephotoactuel.src = event.target.src;
-        imagephotoactuel.style.height = window.innerHeight - 100;
         textephotoactuel.textContent = nomphotoactuel[i].textContent;
         pointeuractuel = parseInt(blocphoto[i].style.order);
         if (pointeuractuel == 0){
@@ -275,13 +298,13 @@ for (let i = 0; i < blocphotounique.length; i++){
             imagephotoactuel.style.display = "none";
             videoactuelle.style.display = "flex";
             videoactuelle.src = event.target.src.replace('jpg', 'mp4')
-            videoactuelle.style.height = window.innerHeight - 100;
+            videoactuelle.style.height = window.innerHeight - 80;
         }
         if(blocphotounique[i].getAttribute('video') == "no" ){
             imagephotoactuel.src = event.target.src;
             imagephotoactuel.style.display = "flex";
             videoactuelle.style.display = "none";
-            imagephotoactuel.style.height = window.innerHeight - 100;
+            imagephotoactuel.style.height = window.innerHeight - 80;
         }
     })
 }
@@ -298,14 +321,14 @@ next.addEventListener('click', function(event){
         imagephotoactuel.src = findvaleurnext.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
         videoactuelle.style.display = "none";
-        imagephotoactuel.style.height = window.innerHeight - 100;
+        imagephotoactuel.style.height = window.innerHeight - 80;
     }
     if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "yes"){
         imagephotoactuel.src = "";
         videoactuelle.src = findvaleurnext.firstChild.firstChild.src.replace('jpg', 'mp4')
         imagephotoactuel.style.display = "none";
         videoactuelle.style.display = "flex";
-        videoactuelle.style.height = window.innerHeight - 100;
+        videoactuelle.style.height = window.innerHeight - 80;
     }
     textephotoactuel.textContent = findvaleurnext.lastChild.firstChild.textContent;
     pointeuractuel += 1;
@@ -325,17 +348,16 @@ previous.addEventListener('click', function(event){
         imagephotoactuel.src = findvaleurprevious.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
         videoactuelle.style.display = "none";
-        imagephotoactuel.style.height = window.innerHeight - 100;
+        imagephotoactuel.style.height = window.innerHeight - 80;
     }
     if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "yes"){
         imagephotoactuel.src = "";
         videoactuelle.src = findvaleurprevious.firstChild.firstChild.src.replace('jpg', 'mp4')
         imagephotoactuel.style.display = "none";
         videoactuelle.style.display = "flex";
-        videoactuelle.style.height = window.innerHeight - 100;
+        videoactuelle.style.height = window.innerHeight - 80;
     }
     textephotoactuel.textContent = findvaleurprevious.lastChild.firstChild.textContent;
-    imagephotoactuel.style.height = window.innerHeight - 100; 
     pointeuractuel -= 1;
     next.style.display = "flex";
     if (pointeuractuel == 0){
@@ -390,6 +412,11 @@ popularite.addEventListener('click', function(){
     document.getElementById('triechoix').style.display = "none"; 
     document.getElementById('choixactuel').style.display = "flex";
     pasdedouble();
+    popularite.style.order = 0;
+    titre.style.order = 2;
+    date.style.order = 1;
+    document.getElementById('popularite').classList.remove('choixinverse');
+    document.getElementById('date').classList.remove('choixinverse');
 });
 
 titre.addEventListener('click', function(){
@@ -408,6 +435,11 @@ titre.addEventListener('click', function(){
     document.getElementById('triechoix').style.display = "none"; 
     document.getElementById('choixactuel').style.display = "flex";
     pasdedouble();
+    popularite.style.order = 1;
+    titre.style.order = 0;
+    date.style.order = 2;
+    popularite.className += ' choixinverse';
+    date.className += ' choixinverse';
 });
 
 date.addEventListener('click', function(){
@@ -426,6 +458,11 @@ date.addEventListener('click', function(){
     document.getElementById('triechoix').style.display = "none"; 
     document.getElementById('choixactuel').style.display = "flex";
     pasdedouble();
+    popularite.style.order = 1;
+    titre.style.order = 2;
+    date.style.order = 0;
+    document.getElementById('popularite').classList.remove('choixinverse');
+    document.getElementById('date').classList.remove('choixinverse');
 });
    
 function pasdedouble(){
@@ -434,7 +471,7 @@ function pasdedouble(){
         tableauverif[i] = parseInt(listephotos.children[i].style.order);
     }
     let doublons = parseInt(tableauverif.filter((e, i, a) => a.indexOf(e) !== i));
-    while(doublons != -1){
+    while(doublons != -1 && blocphoto[tableauverif.indexOf(doublons)] !== undefined){
         blocphoto[tableauverif.indexOf(doublons)].style.order = blocphoto[tableauverif.indexOf(doublons)].style.order - 1;
         for(let i=0; i < listephotos.children.length; i++){
             tableauverif[i] = parseInt(listephotos.children[i].style.order);

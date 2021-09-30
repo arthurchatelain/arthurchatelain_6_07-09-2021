@@ -11,7 +11,22 @@
 $couleurprimary: #901C1C;
 $couleursecondary: #D3573C;
 $couleurtertiary: #6b6b6b;
+$couleurquatre: #db8876;
 $paddingpresentationtexte: 5px;
+
+@font-face {
+  font-family: 'policegeneral';
+  src: url(Polices/Gilroy-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'policegeneralbold';
+  src: url(Polices/Gilroy-SemiBold.ttf);
+}
+@font-face {
+  font-family: 'policegeneralmedium';
+  src: url(Polices/Gilroy-Medium.ttf);
+}
 
 header {
   display: -webkit-box;
@@ -28,6 +43,7 @@ header {
   -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 25px 75px;
+  font-family: policegeneral;
 }
 
 header .lienlogo {
@@ -70,6 +86,7 @@ header h1 {
   border-color: #bbbaba;
   font-weight: bold;
   cursor: context-menu;
+  font-family: policegeneralbold;
 }
 
 .blocphotographe {
@@ -85,18 +102,22 @@ header h1 {
       padding: $paddingpresentationtexte;
       color: $couleursecondary;
       font-size: xx-large;
+      font-family: policegeneralmedium;
   }
   .location {
       padding: $paddingpresentationtexte;
       color: $couleurprimary;
       font-size: large;
+      font-family: policegeneralmedium;
   }
   .phrase {
       padding: $paddingpresentationtexte;
+      font-family: policegeneral;
   }
   .tarif {
       padding: $paddingpresentationtexte;
       color: $couleurtertiary;
+      font-family: policegeneralmedium;
   }
   .divimg {
   width: 220px;
@@ -125,6 +146,21 @@ main {
   flex-wrap: wrap;
 }
 
+#ancreretour {
+  position: fixed;
+  top: 8px;
+  background-color: $couleurquatre;
+  color: black;
+  font-family: policegeneralbold;
+  left: 0;
+  right: 0;
+  text-align: center;
+  margin: auto 42%;
+  padding: 6px;
+  border-radius: 5px;
+  display: none;
+}
+
 @media (max-width: 1375px){
   header .lienlogo {
     width: 170px;
@@ -146,12 +182,128 @@ main {
     flex-direction: column;
   }
   header h1 {
-    position: fixed;
+    position: absolute;
     right: 5%;
     top: 32px;
   }
 }
 
-@media (max-width: 1050px) {
-  
+@media (max-width: 1080px) {
+  .blocphotographe {
+    width: calc(100% / 2 - 20px);
+  }
+}
+
+@media (max-width: 980px) {
+  header {
+    padding: 25px 0px;
+    align-items: unset;
+    .lienlogo {
+      padding-left: 65px;
+    }
+  }
+  .blocphotographe {
+    padding: 75px 0px;
+    width: calc(100% / 2);
+  }
+  .listetags {
+    align-self: center;
+  }
+  #ancreretour {
+    margin: auto 39%;
+  }
+}
+
+@media (max-width: 780px) {
+  .blocphotographe {
+    padding: 75px 0px;
+    width: 100%;
+  }
+  .listetags {
+    flex-wrap: wrap;
+    padding-left: 40px;
+    padding-right: 40px;
+    justify-content: center;
+  }
+  .tag {
+    margin: 4px;
+  }
+  #ancreretour {
+    margin: auto 37%;
+  }
+
+}
+@media (max-width: 650px) {
+  header .lienlogo {
+    width: 180px;
+    padding-left: 40px;
+  }
+  header h1 {
+    font-size: x-large;
+  }
+  #ancreretour {
+    margin: auto 33%;
+  }
+}
+
+@media (max-width: 500px) {
+  header .lienlogo {
+    width: 150px;
+  }
+  header h1 {
+    font-size: large;
+    top: 33px;
+  }
+}
+
+@media (max-width: 450px) {
+  #ancreretour {
+    margin: auto 30%;
+  }
+  header .lienlogo {
+    width: 130px;
+  }
+  header h1 {
+    top: 30px;
+  }
+}
+@media (max-width: 380px) {
+  header h1 {
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    top: 11%;
+  }
+  header {
+    align-items: center;
+  }
+  header .lienlogo {
+    padding-left: 0px;
+  }
+  #ancreretour {
+    margin: auto 25%;
+  }
+  .blocphotographe .divimg {
+    width: 190px;
+    height: 190px;
+  }
+  .blocphotographe nav {
+    flex-wrap: wrap;
+    padding-left: 15px;
+    padding-right: 15px;
+    justify-content: center;
+  }
+  .tagf {
+    font-size: smaller;
+  }
+}
+@media (max-width: 330px) {
+  .blocphotographe .nom {
+    font-size: x-large;
+  }
+  .blocphotographe .phrase {
+    padding-right: 15px;
+    padding-left: 15px;
+    text-align: center;
+  }
 }

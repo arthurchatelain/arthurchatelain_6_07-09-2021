@@ -374,6 +374,7 @@ textarea:focus, input:focus {
   font-size: x-large;
   padding-top: 15px;
   align-self: flex-start;
+  height: 50px;
 }
 
 #videoactuelle {
@@ -411,14 +412,24 @@ textarea:focus, input:focus {
   background-color: #901C1C;
   padding: 15px 10px;
   color: white;
+  padding-right: 51.8px;
 }
 #triechoix #chevronup {
-  padding-left: 25px;
+  position: absolute;
+  right: 25px;
+  top: 16px;
+  color: white;
 }
-#triechoix #popularite, #triechoix #date {
+#triechoix .choixdroit {
   border-bottom-color: white;
   border-bottom-style: solid;
   border-bottom-width: 2px;
+}
+#triechoix .choixinverse {
+  border-top-color: white;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-bottom: none;
 }
 
 #choixactuel {
