@@ -32,6 +32,7 @@ function BlocPhotographe(number){
     let image = document.createElement('img');
     image.src = './images/photographers/' + data.photographers[number].portrait;
     image.className = "imageportrait"
+    image.alt = data.photographers[number].name;
     divimg.appendChild(image); 
     let prenom = document.createElement('p');
     prenom.textContent = data.photographers[number].name;

@@ -298,13 +298,13 @@ for (let i = 0; i < blocphotounique.length; i++){
             imagephotoactuel.style.display = "none";
             videoactuelle.style.display = "flex";
             videoactuelle.src = event.target.src.replace('jpg', 'mp4')
-            videoactuelle.style.height = window.innerHeight - 80;
+            videoactuelle.style.maxHeight = window.innerHeight - 80;
         }
         if(blocphotounique[i].getAttribute('video') == "no" ){
             imagephotoactuel.src = event.target.src;
             imagephotoactuel.style.display = "flex";
             videoactuelle.style.display = "none";
-            imagephotoactuel.style.height = window.innerHeight - 80;
+            imagephotoactuel.style.maxHeight = window.innerHeight - 80;
         }
     })
 }
@@ -321,14 +321,14 @@ next.addEventListener('click', function(event){
         imagephotoactuel.src = findvaleurnext.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
         videoactuelle.style.display = "none";
-        imagephotoactuel.style.height = window.innerHeight - 80;
+        imagephotoactuel.style.maxHeight = window.innerHeight - 80;
     }
     if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "yes"){
         imagephotoactuel.src = "";
         videoactuelle.src = findvaleurnext.firstChild.firstChild.src.replace('jpg', 'mp4')
         imagephotoactuel.style.display = "none";
         videoactuelle.style.display = "flex";
-        videoactuelle.style.height = window.innerHeight - 80;
+        videoactuelle.style.maxHeight = window.innerHeight - 80;
     }
     textephotoactuel.textContent = findvaleurnext.lastChild.firstChild.textContent;
     pointeuractuel += 1;
@@ -348,14 +348,14 @@ previous.addEventListener('click', function(event){
         imagephotoactuel.src = findvaleurprevious.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
         videoactuelle.style.display = "none";
-        imagephotoactuel.style.height = window.innerHeight - 80;
+        imagephotoactuel.style.maxHeight = window.innerHeight - 80;
     }
     if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "yes"){
         imagephotoactuel.src = "";
         videoactuelle.src = findvaleurprevious.firstChild.firstChild.src.replace('jpg', 'mp4')
         imagephotoactuel.style.display = "none";
         videoactuelle.style.display = "flex";
-        videoactuelle.style.height = window.innerHeight - 80;
+        videoactuelle.style.maxHeight = window.innerHeight - 80;
     }
     textephotoactuel.textContent = findvaleurprevious.lastChild.firstChild.textContent;
     pointeuractuel -= 1;

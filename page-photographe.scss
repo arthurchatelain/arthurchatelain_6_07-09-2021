@@ -370,6 +370,10 @@ textarea:focus, input:focus {
 }
 #videoactuelle {
     display: none;
+    width: 100%;
+}
+#imagephotoactuel {
+    width: 100%;
 }
 #trie {
     padding-top: 90px;
@@ -394,6 +398,7 @@ textarea:focus, input:focus {
     padding: 0px 15px;
     position: absolute;
     left: 130px;
+    cursor: pointer;
     .choix {
         border: none;
         background-color: $couleurprimary;
@@ -430,6 +435,7 @@ textarea:focus, input:focus {
     align-items: center;
     position: absolute;
     left: 130px;
+    cursor: pointer;
     #trieactuel {
         padding-right: 25px;
     }
@@ -461,6 +467,23 @@ textarea:focus, input:focus {
     }
     .openmodalcontact {
         margin-left: 30px;
+    }
+    #modalimagebg {
+        padding-left: 100px;
+        padding-right: 100px;
+        width: calc(100% - 200px);
+        #next {
+            padding-right: 40px;
+            top: calc(50% - 40px);
+        }
+        #previous {
+            padding-left: 40px;
+            top: calc(50% - 40px);
+        }
+    }
+    .modalimageclose::after, .modalimageclose::before {
+        right: 50px;
+
     }
 }
 
@@ -514,6 +537,25 @@ textarea:focus, input:focus {
         width: 50%;
         justify-content: space-around;
         padding: 15px 25px;
+    }
+    #modalimagebg {
+        padding-left: 50px;
+        padding-right: 50px;
+        width: calc(100% - 100px);
+        #next {
+            font-size: xx-large;
+            padding-right: 13px;
+        }
+        #previous {
+            font-size: xx-large;
+            padding-left: 13px;
+        }
+    }
+    .modalimageclose::after, .modalimageclose::before {
+        height: 30px;
+        width: 4px;
+        right: 25px;
+        top: 25px;
     }
 }
 
@@ -590,6 +632,10 @@ textarea:focus, input:focus {
     }
     .headerphotographe .tagbypers {
         justify-content: center;
+        flex-wrap: wrap;
+        .tags {
+            margin: 4px;
+        }
     }
     .articlephotographe {
         width: 100%;
@@ -607,6 +653,9 @@ textarea:focus, input:focus {
         width: 38%;
         margin: auto 31%;
     }
+    .modaltitre, .modalnom {
+        font-size: 30px;
+    }
 }
 
 @media (max-width: 335px) {
@@ -617,5 +666,8 @@ textarea:focus, input:focus {
     header .imglogo {
         width: 145px;
         top: 20px;
+    }
+    .modaltitre, .modalnom {
+        font-size: 28px;
     }
 }
