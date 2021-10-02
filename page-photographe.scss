@@ -53,6 +53,7 @@ header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width: calc(100% - 140px);
     .tagbypers {
         position: relative;
         left: -4px;
@@ -95,7 +96,7 @@ header {
         font-family: policegeneral;
       }
     }
-  }
+}
   .imageportrait {
     width: 100%;
   }
@@ -133,21 +134,21 @@ header {
     justify-content: center;
     
   }
-  .modalclose::after, .modalclose::before {
+
+#modalclose::after, #modalclose::before {
     position: absolute;
     left: 15px;
     content: " ";
     height: 33px;
     width: 3px;
     background-color: white;
-  }
-.modalclose::after {
+}
+#modalclose::after {
     transform: rotate(45deg);
 }
-.modalclose::before {
+#modalclose::before {
     transform: rotate(-45deg)
 }
-
 .modaltitre {
     font-family: policegeneral;
     font-size: 35px;
@@ -166,7 +167,7 @@ header {
 .modalmenu {
     padding-bottom: 10px;
 }
-.modalclose {
+#modalclose {
     position: absolute;
     right: 23px;
     top: 23px;
@@ -425,6 +426,14 @@ textarea:focus, input:focus {
         border-bottom: none;
     }
 }
+#modalimageclose {
+    color: $couleurprimary;
+    position: absolute;
+    right: 60px;
+    top: 60px;
+    font-size: xxx-large;
+    cursor: pointer;
+}
 #choixactuel {
     background-color: $couleurprimary;
     color: white;
@@ -440,7 +449,17 @@ textarea:focus, input:focus {
         padding-right: 25px;
     }
 }
+input#btn-submit:focus {
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+}
 
+.text-control:focus {
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+}
 @media (max-width: 1225px) {
     body {
         padding: 35px 40px;
@@ -453,6 +472,7 @@ textarea:focus, input:focus {
     }
     .headerphotographe {
         padding: 40px;
+        width: calc(100% - 80px);
     }
 }
 
@@ -481,9 +501,8 @@ textarea:focus, input:focus {
             top: calc(50% - 40px);
         }
     }
-    .modalimageclose::after, .modalimageclose::before {
-        right: 50px;
-
+    #modalimageclose {
+        right: 35px;
     }
 }
 
@@ -509,6 +528,7 @@ textarea:focus, input:focus {
 @media (max-width: 785px) {
     .headerphotographe {
         padding: 0px;
+        width: 100%;
         background-color: white;
     }
     #trie {
@@ -551,11 +571,9 @@ textarea:focus, input:focus {
             padding-left: 13px;
         }
     }
-    .modalimageclose::after, .modalimageclose::before {
-        height: 30px;
-        width: 4px;
-        right: 25px;
-        top: 25px;
+    #modalimageclose {
+        right: 12px;
+        font-size: xx-large;
     }
 }
 

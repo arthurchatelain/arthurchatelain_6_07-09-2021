@@ -22,11 +22,17 @@ function creerbloc(type, className, textContent){
     return bloc;
 }
 
+// fonction pour ajouter un tabindex et un arial label
+function rendreaccessible(objet, arialabel){
+    objet.tabIndex = 1;
+    objet.ariaLabel = arialabel;
+}
 // definition de la fonction pour créer le header
 function HeaderPhotographe(number){
     let photographe = creerbloc('section', 'headerphotographe');
     photographe.setAttribute('data-idPhotographers', data.photographers[number].id)
-    let divimg = creerbloc('div', 'divimg');
+    let divimg = creerbloc('a', 'divimg');
+    rendreaccessible(divimg, 'photographe ' + prenomduphotographe);
     let image = creerbloc('img', 'imageportrait');
     image.src = './images/photographers/' + data.photographers[number].portrait;
     divimg.appendChild(image); 
@@ -41,6 +47,8 @@ function HeaderPhotographe(number){
     }
     let divarticle = creerbloc('div', 'divarticle');
     let boutoncontact = creerbloc('button', 'openmodal openmodalcontact', 'Contactez-Moi');
+    boutoncontact.id = 'openmodal';
+    rendreaccessible(boutoncontact, "Contactez" + data.photographers[number].name)
     divarticle.append(prenom, lieu, sentence, filtres);
     articlephotographe.append(divarticle, boutoncontact);
     photographe.append(articlephotographe, divimg);
@@ -48,6 +56,8 @@ function HeaderPhotographe(number){
     let modalmenu = creerbloc('div', 'modalmenu');
     let modaltitre = creerbloc('h1', 'modaltitre', 'Contactez-Moi');
     let modalclose = creerbloc('span', 'modalclose');
+    modalclose.id = 'modalclose';
+    modalclose.tabIndex = '1';
     modalmenu.append(modaltitre, modalclose);
     let modalnom = creerbloc('p', 'modalnom', data.photographers[number].name);
     document.getElementById('contenermodaltexte').append(modalmenu, modalnom);
@@ -56,25 +66,27 @@ function HeaderPhotographe(number){
 // On appel la fonction pour créer le header 
 HeaderPhotographe(numeroduphotographe);
 
-    
 // fonctionalités modals 
 
 // récupération des éléments de gestion des modals
 let modalbg = document.getElementById('modalbg');
-let openmodal = document.querySelectorAll(".openmodal");
-let fermerModal = document.querySelectorAll(".modalclose");
-let fermerModalImage = document.querySelectorAll(".modalimageclose");
+let openmodal = document.getElementById("openmodal");
+let fermerModal = document.getElementById("modalclose");
+let fermerModalImage = document.getElementById("modalimageclose");
 let modalimagebg = document.getElementById('modalimagebg');
 
 // fonctions d'ouverture et de fermeture des modals
+
 function launchModal() {
     modalbg.style.display = "flex";
 }
+
 function CloseModal() {
     modalbg.style.display = "none";
 }
+
 function CloseModalImage() {
-    modalimagebg.style.display = "none";
+    lightbox("none", "flex");
 }
 
 // fonction de soumission du formulaire et d'affichage des réponses dans la console
@@ -87,9 +99,21 @@ function submit() {
 }
 
 // écoute d'evenement pour l'ouverture et la femeture des modals
-openmodal.forEach((btn) => btn.addEventListener("click", launchModal));
-fermerModal.forEach((btn) => btn.addEventListener("click", CloseModal));
-fermerModalImage.forEach((btn) => btn.addEventListener("click", CloseModalImage));
+openmodal.addEventListener("click", launchModal);
+fermerModal.addEventListener("click", CloseModal);
+fermerModal.addEventListener("keydown", function(event){
+    if(event.key == 'Enter'){
+        CloseModal();
+        document.getElementById('choixactuel').focus()
+    }
+});
+fermerModalImage.addEventListener("click", CloseModalImage);
+fermerModalImage.addEventListener("keydown", function(event){
+    if(event.key == 'Enter'){
+        CloseModalImage();
+        document.getElementById('choixactuel').focus()
+    }
+});
 
 // écoute d'évenement pour la soumission du formulaire
 document.getElementById('btn-submit').addEventListener('click', function (e) {
@@ -106,6 +130,7 @@ function createBlocImageUnique(type, identity, order){
     let blocphoto = creerbloc('article', 'blocphoto');
     blocphoto.setAttribute('date', imageDeTravail.date)
     blocphoto.style.order = order;
+    blocphoto.tabIndex = order + 2;
     let divimgblocphoto = creerbloc('a', 'divimgblocphoto');
     let imgblocphoto = document.createElement('img');
 
@@ -145,6 +170,7 @@ function createBlocImageUnique(type, identity, order){
     let divlikes = creerbloc('div', 'divlikes');
     let nblikes = creerbloc('p', 'nblikes', imageDeTravail.likes);
     let like = creerbloc('i', 'far fa-heart iconecoeurclick');
+    like.tabIndex = order + 2;
     like.setAttribute('testclick', 'notclicked'); 
     divlikes.append(nblikes, like);
     menuphoto.append(nomphoto, divlikes);
@@ -203,12 +229,25 @@ let pointeuractuel;
 let next = document.getElementById('next');
 let previous = document.getElementById('previous');
 
-// écoute du clique sur une image pour ouvrir la lightox
-for (let i = 0; i < blocphotounique.length; i++){
-    blocphotounique[i].addEventListener('click', function(event){
-        event.preventDefault();
-        event.stopPropagation();
-        modalimagebg.style.display = "flex";
+
+// fonction qui active désactive la lightbox 
+
+function lightbox(open, close){
+    document.getElementById('header').style.display = close;
+    modalimagebg.style.display = open;
+    Array.from(document.getElementById('main').children).forEach(function(item){
+        if (item.id != 'modalimagebg' && item.id != 'modalbg'){
+            item.style.display = close;
+        }
+    })
+}
+
+// fonction d'ouverture de la lightbox 
+
+function openlightbox(event, i){
+    event.preventDefault()
+    event.stopPropagation()
+        lightbox("flex", "none")
         textephotoactuel.textContent = nomphotoactuel[i].textContent;
         // le pointeur actuel pointe sur l'ordre de l'image actuellement affichée, on test si il est égal à 0 ou au maximum
         pointeuractuel = parseInt(blocphoto[i].style.order);
@@ -229,22 +268,35 @@ for (let i = 0; i < blocphotounique.length; i++){
             imagephotoactuel.src = "";
             imagephotoactuel.style.display = "none";
             videoactuelle.style.display = "flex";
-            videoactuelle.src = event.target.src.replace('jpg', 'mp4')
+            videoactuelle.src = blocphotounique[i].src.replace('jpg', 'mp4')
             videoactuelle.style.maxHeight = window.innerHeight - 80;
         }
         if(blocphotounique[i].getAttribute('video') == "no" ){
-            imagephotoactuel.src = event.target.src;
+            imagephotoactuel.src = blocphotounique[i].src;
             imagephotoactuel.style.display = "flex";
             videoactuelle.style.display = "none";
             imagephotoactuel.style.maxHeight = window.innerHeight - 80;
         }
+}
+
+// écoute du clique sur une image pour ouvrir la lightox
+for (let i = 0; i < blocphotounique.length; i++){
+    blocphotounique[i].addEventListener('click', function(event){
+        openlightbox(event, i);
     })
+}
+for (let i = 0; i < blocphoto.length; i++){
+    blocphoto[i].addEventListener("keydown", function(event){
+        if(event.key == 'Enter'){
+            openlightbox(event, i);
+        }
+    });
 }
 
 // Fonctionnalité de navigation au click sur les élement previous et next de la lightbox
 
-// Ecoute du click sur les éléments next et previous de la lightbox
-next.addEventListener('click', function(event){
+// déclaration des fonctions next et previous
+function onclicknext(event){
     event.stopPropagation();
     event.preventDefault();
     // determination du bloc suivant pour recuperer le lien de son image
@@ -272,9 +324,8 @@ next.addEventListener('click', function(event){
     if (pointeuractuel == (blocphotounique.length - 1)){
         next.style.display = "none";
     }
-})
-
-previous.addEventListener('click', function(event){
+}
+function onclickprevious(event){
     event.stopPropagation();
     event.preventDefault();
     // determination du bloc suivant pour recuperer le lien de son image
@@ -302,6 +353,25 @@ previous.addEventListener('click', function(event){
     if (pointeuractuel == 0){
         previous.style.display = "none";
     }
+}
+
+// Ecoute du click sur les éléments next et previous de la lightbox
+next.addEventListener('keydown', function(event){
+    if(event.key == 'Enter'){
+        onclicknext(event);
+    }
+})
+next.addEventListener('click', function(event){
+    onclicknext(event);
+})
+
+previous.addEventListener('keydown', function(event){
+    if(event.key == 'Enter'){
+        onclickprevious(event);
+    }
+})
+previous.addEventListener('click', function(event){
+    onclickprevious(event);
 })
 
 // Fonctionnalités des boutons de trie
@@ -312,20 +382,76 @@ let choixactuel = document.getElementById('choixactuel');
 let trieactuel = document.getElementById('trieactuel');
 let chevronup = document.getElementById('chevronup');
 
-// écoute du click pour ouvrir le module de choix
-choixactuel.addEventListener('click', function(event){
+// définition fonction choixactuel activer/désactiver
+function openchoix(event){
     event.preventDefault();
     event.stopPropagation();
     triechoix.style.display = "flex";
     choixactuel.style.display = "none";
-})
-
-// écoute du click pour fermer le module de choix
-chevronup.addEventListener('click', function(event){
+}
+function closechoix(event){
     event.preventDefault();
     event.stopPropagation();
     triechoix.style.display = "none";
     choixactuel.style.display = "flex";
+}
+
+// Menu deroulant et ouverture du mdoal de contact + navif=gation clavier dans le modal
+
+// definition de la variable pointant sur le contact actuel
+let ligneactuelle;
+
+// écoute de l'évenement tab
+document.addEventListener('keydown', function(event){
+    // Pour fermer le menu deroulant de trie si il perd le focus
+    if(event.key == 'Tab' && document.activeElement.id != 'chevronup' && document.activeElement.id != 'date' && document.activeElement.id != 'popularite' && document.activeElement.id != 'titre'){
+        triechoix.style.display = "none";
+        choixactuel.style.display = "flex";    
+    }
+    // navigation clavier du modal de contact
+    if(event.key == 'Tab' && document.getElementById('modalbg').style.display == "flex"){
+        event.preventDefault();
+        let textecontrol = document.getElementsByClassName('text-control');
+        if(ligneactuelle == undefined){
+            ligneactuelle = 0;
+            textecontrol[0].focus()
+        }
+        else if(ligneactuelle == textecontrol.length - 1){
+            ligneactuelle += 1;
+            document.getElementById('btn-submit').focus()
+        }
+        else if(ligneactuelle == textecontrol.length){
+            ligneactuelle = undefined;
+            document.getElementById('modalclose').focus()
+        }
+        else {
+            ligneactuelle += 1;
+            textecontrol[ligneactuelle].focus()
+        }
+    }
+})
+
+// écoute du click pour ouvrir le module de choix
+choixactuel.addEventListener('click', function(event){
+    openchoix(event);
+})
+
+choixactuel.addEventListener('keydown', function(event){
+    if(event.key == 'Enter'){
+        openchoix(event);
+        chevronup.focus();
+    }
+})
+
+// écoute du click pour fermer le module de choix
+chevronup.addEventListener('click', function(event){
+    closechoix(event);
+})
+chevronup.addEventListener('keydown', function(event){
+    if(event.key == 'Enter'){
+        closechoix(event);
+        document.getElementById('choixactuel').focus()
+    }
 })
 
 // définition des éléments nécessaires pour les fonctions et les écoute des évenements à suivre
@@ -368,6 +494,7 @@ function triParPopularité(){
         for(let i=0; i < blocphoto.length; i++){
             if(blocphoto[i].lastChild.lastChild.firstChild.textContent == valeur){
                 blocphoto[i].style.order = index;
+                blocphoto[i].tabIndex = index + 2;
             }
         }
     })
@@ -383,6 +510,7 @@ function triParTitre(){
         for(let i=0; i < blocphoto.length; i++){
             if(blocphoto[i].lastChild.firstChild.textContent == valeur){
                 blocphoto[i].style.order = index;
+                blocphoto[i].tabIndex = index + 2;
             }
         }
     })
@@ -398,6 +526,7 @@ function triParDate(){
         for(let i=0; i < blocphoto.length; i++){
             if(blocphoto[i].getAttribute('date').replace('-', '').replace('-', '') == valeur){
                 blocphoto[i].style.order = index;
+                blocphoto[i].tabIndex = index + 2;
             }
         }
     })
@@ -418,34 +547,64 @@ function trieAffichage(actual){
     }
 }
 
-// écoute de l'évenement pour trier par popularité, par date ou par titre
-popularite.addEventListener('click', function(){
+// définition fonction d'écoute
+
+function ecoutepopularite(){
     trieAffichage('Popularité')
     triParPopularité()
     pasdedouble();
     popularite.style.order = 0;
     titre.style.order = 2;
     date.style.order = 1;
-});
+}
 
-titre.addEventListener('click', function(){
+function ecoutetitre() {
     trieAffichage('Titre')
     triParTitre();
     pasdedouble();
     popularite.style.order = 1;
     titre.style.order = 0;
     date.style.order = 2;
-});
-
-date.addEventListener('click', function(){
+}
+function ecoutedate() {
     trieAffichage('Date')
     triParDate();
     pasdedouble();
     popularite.style.order = 1;
     titre.style.order = 2;
     date.style.order = 0;
+}
+
+// écoute de l'évenement pour trier par popularité, par date ou par titre 
+popularite.addEventListener('click', function(){
+    ecoutepopularite();
+});
+popularite.addEventListener('keydown', function(event){
+    if(event.key == 'Enter'){
+        ecoutepopularite();
+        document.getElementById('choixactuel').focus();
+    }   
 });
 
+titre.addEventListener('click', function(){
+    ecoutetitre();
+});
+titre.addEventListener('keydown', function(event){
+    if(event.key == 'Enter'){
+        ecoutetitre();
+        document.getElementById('choixactuel').focus();
+    }   
+});
+
+date.addEventListener('click', function(){
+    ecoutedate();
+});
+date.addEventListener('keydown', function(event){
+    if(event.key == 'Enter'){
+        ecoutedate();
+        document.getElementById('choixactuel').focus();
+    }   
+});
 
 // fonctionnalités likes
 

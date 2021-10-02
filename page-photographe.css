@@ -45,6 +45,7 @@ header .imglogo {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: calc(100% - 140px);
 }
 .headerphotographe .tagbypers {
   position: relative;
@@ -126,7 +127,7 @@ header .imglogo {
   justify-content: center;
 }
 
-.modalclose::after, .modalclose::before {
+#modalclose::after, #modalclose::before {
   position: absolute;
   left: 15px;
   content: " ";
@@ -135,11 +136,11 @@ header .imglogo {
   background-color: white;
 }
 
-.modalclose::after {
+#modalclose::after {
   transform: rotate(45deg);
 }
 
-.modalclose::before {
+#modalclose::before {
   transform: rotate(-45deg);
 }
 
@@ -164,7 +165,7 @@ header .imglogo {
   padding-bottom: 10px;
 }
 
-.modalclose {
+#modalclose {
   position: absolute;
   right: 23px;
   top: 23px;
@@ -438,6 +439,15 @@ textarea:focus, input:focus {
   border-bottom: none;
 }
 
+#modalimageclose {
+  color: #901C1C;
+  position: absolute;
+  right: 60px;
+  top: 60px;
+  font-size: xxx-large;
+  cursor: pointer;
+}
+
 #choixactuel {
   background-color: #901C1C;
   color: white;
@@ -454,6 +464,18 @@ textarea:focus, input:focus {
   padding-right: 25px;
 }
 
+input#btn-submit:focus {
+  border-width: 2px;
+  border-color: black;
+  border-style: solid;
+}
+
+.text-control:focus {
+  border-width: 2px;
+  border-color: black;
+  border-style: solid;
+}
+
 @media (max-width: 1225px) {
   body {
     padding: 35px 40px;
@@ -466,6 +488,7 @@ textarea:focus, input:focus {
 
   .headerphotographe {
     padding: 40px;
+    width: calc(100% - 80px);
   }
 }
 @media (max-width: 1035px) {
@@ -497,8 +520,8 @@ textarea:focus, input:focus {
     top: calc(50% - 40px);
   }
 
-  .modalimageclose::after, .modalimageclose::before {
-    right: 50px;
+  #modalimageclose {
+    right: 35px;
   }
 }
 @media (max-width: 875px) {
@@ -525,6 +548,7 @@ textarea:focus, input:focus {
 @media (max-width: 785px) {
   .headerphotographe {
     padding: 0px;
+    width: 100%;
     background-color: white;
   }
 
@@ -573,11 +597,9 @@ textarea:focus, input:focus {
     padding-left: 13px;
   }
 
-  .modalimageclose::after, .modalimageclose::before {
-    height: 30px;
-    width: 4px;
-    right: 25px;
-    top: 25px;
+  #modalimageclose {
+    right: 12px;
+    font-size: xx-large;
   }
 }
 @media (max-width: 740px) {

@@ -24,6 +24,7 @@ function createHeader(){
         createtag.className = "tag tagclick";
         createtag.textContent = "#" + item;
         createtag.tabIndex = "inherit";
+        createtag.ariaLabel = item;
         nav.appendChild(createtag);
     })
     header.appendChild(nav);
@@ -45,7 +46,7 @@ function BlocPhotographe(number){
     photographe.tabIndex = "0";
     photographe.href = './page-photographe.html?id=' + data.photographers[number].id;
     photographe.setAttribute('data-idPhotographers', data.photographers[number].id)
-    photographe.ariaLabel = "Photographe" + data.photographers[number].name ;
+    photographe.ariaLabel = "Photographe" + data.photographers[number].name + "basé à " + data.photographers[number].city + "qui dit" + data.photographers[number].tagline;
     let divimg = creerbloc('div', 'divimg');
     let image = creerbloc('img', 'imageportrait');
     image.src = './images/photographers/' + data.photographers[number].portrait;
@@ -76,13 +77,11 @@ let taglist = document.getElementsByClassName("tagclick");
 let tagneeded = [];
 let tagclicked = [];
 for (let i = 0; i < taglist.length; i++) {
+    tagclicked[i] = 0
     // fonctionnalités hoover
     taglist[i].addEventListener('mouseover', function(){
         taglist[i].style.backgroundColor = '#901C1C';
         taglist[i].style.color = 'white';
-        if (tagclicked[i] == undefined){
-            tagclicked[i] = 0;
-        }
     })
     taglist[i].addEventListener('mouseout', function(){
         if (tagclicked[i] != 1) {
@@ -94,6 +93,7 @@ for (let i = 0; i < taglist.length; i++) {
     taglist[i].addEventListener('click', function(){
         if (tagclicked[i] == 0){
             taglist[i].style.backgroundColor = '#901C1C';
+            taglist[i].style.color = 'white';
             tagclicked[i] = 1;
             tagneeded[i] = taglist[i].textContent;
             tagmanagement(tagneeded);

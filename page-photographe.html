@@ -8,31 +8,31 @@
     </head>
     <body>
         <header id="header">
-            <a href="accueil.html" class="lienlogo"><img src="images/logo.png" alt="FishEye Home Page" class="imglogo"></a>
+            <a href="index.html" class="lienlogo" tabindex="1"><img src="images/logo.png" alt="FishEye Home Page" class="imglogo"></a>
         </header>
         <main id="main">
           <section id="headermain"></section>
           <section id="trie">
             <p id="textetrie">Trier par</p>
-            <div id="choixactuel">
+            <a id="choixactuel" aria-label="trier par" tabindex="1">
               <span id="trieactuel">Popularité</span>
               <i class="fas fa-chevron-down"></i>
-            </div>
+            </a>
             <div id="triechoix">
-              <i class="fas fa-chevron-up" id="chevronup"></i>
-              <span class="choix choixdroit" id="popularite">Popularité</span>
-              <span class="choix choixdroit" id="date">Date</span>
-              <span class="choix" id="titrechoix">Titre</span>
+              <i class="fas fa-chevron-up" id="chevronup" tabindex="1"></i>
+              <span class="choix choixdroit" id="popularite" tabindex="1">Popularité</span>
+              <span class="choix choixdroit" id="date" tabindex="1">Date</span>
+              <span class="choix" id="titrechoix" tabindex="1">Titre</span>
             </div>
           </section>
           <section id="modalimagebg">
             <div id="divmodalimage">
-              <img id="imagephotoactuel" src="" alt="">
-              <video controls src="" id="videoactuelle"></video>
+              <img id="imagephotoactuel" src="" alt="" tabindex="1">
+              <video controls src="" id="videoactuelle" tabindex="1"></video>
               <p id="textephotoactuel"></p>
-              <a href="#"><i class="fas fa-chevron-left" id="previous"></i></a>
-              <a href="#"><i class="fas fa-chevron-right" id="next"></i></a>
-              <span class="modalimageclose"></span>
+              <i class="fas fa-chevron-left" id="previous" tabindex="1"></i>
+              <i class="fas fa-chevron-right" id="next" tabindex="1"></i>
+              <i class="fas fa-times" id="modalimageclose" tabindex="1"></i>
             </div>
           </section>
             <section id="modalbg">
@@ -40,21 +40,21 @@
                     <form onsubmit="soumissionForm()">
                         <div class="formData">
                           <label for="first">Prénom</label>
-                          <input class="text-control" type="text" id="first" name="first" minlength="2"/>
+                          <input aria-label="Votre Prénom" class="text-control" type="text" id="first" name="first" minlength="2" tabindex="0"/>
                         </div>
                         <div class="formData">
                             <label for="last">Nom</label>
-                            <input class="text-control" type="text" id="last" name="last" minlength="2"/>
+                            <input aria-label="Votre Nom" class="text-control" type="text" id="last" name="last" minlength="2" tabindex="0"/>
                           </div>
                           <div class="formData">
                             <label for="email">Email</label>
-                            <input class="text-control" type="text" id="email" name="email" minlength="2"/>
+                            <input aria-label="Votre Email" class="text-control" type="text" id="email" name="email" minlength="2" tabindex="0"/>
                           </div>
                           <div class="formData">
                             <label for="message">Votre message</label>
-                            <textarea class="text-control" rows="4" type="text" id="message" name="message" minlength="2"></textarea>
+                            <textarea aria-label="Votre message" class="text-control" rows="4" type="text" id="message" name="message" minlength="2" tabindex="0"></textarea>
                           </div>
-                          <input id="btn-submit" type="submit" class="button" value="Envoyer"/>
+                          <input aria-label="Envoyer le formulaire de contact" id="btn-submit" type="submit" class="button" value="Envoyer" tabindex="0"/>
                     </form>
                     <article id="contenermodaltexte">
 
