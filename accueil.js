@@ -5,18 +5,22 @@ const nombredephotographes = 6;
 function createHeader(){
     let tags = [];
     data.photographers.forEach((item)=>{
-        tags = [...tags, ...item.tags]
+        tags = [
+...tags,
+...item.tags
+]
     })
-    tags = [... new Set(tags)];
+    tags = [...new Set(tags)];
     var nav = document.createElement('nav');
     nav.className = "listetags";
     var header = document.getElementById('header');
     var titre = document.createElement('h1');
     titre.textContent = "Nos Photographes";
     tags.forEach(function(item){
-        var createtag = document.createElement('span');
+        var createtag = document.createElement('a');
         createtag.className = "tag tagclick";
         createtag.textContent = "#" + item;
+        createtag.tabIndex = "inherit";
         nav.appendChild(createtag);
     })
     header.appendChild(nav);
@@ -24,15 +28,18 @@ function createHeader(){
 }
 
 function BlocPhotographe(number){
-    let photographe = document.createElement('section');
+    let photographe = document.createElement('a');
     photographe.className = "blocphotographe" ;
+    photographe.tabIndex = "0";
+    photographe.href = './page-photographe.html?id=' + data.photographers[number].id;
     photographe.setAttribute('data-idPhotographers', data.photographers[number].id)
+    photographe.ariaLabel = "Photographe" + data.photographers[number].name ;
     let divimg = document.createElement('div');
     divimg.className = "divimg"; 
     let image = document.createElement('img');
     image.src = './images/photographers/' + data.photographers[number].portrait;
     image.className = "imageportrait"
-    image.alt = data.photographers[number].name;
+    image.alt = "portrait de" + data.photographers[number].name;
     divimg.appendChild(image); 
     let prenom = document.createElement('p');
     prenom.textContent = data.photographers[number].name;
@@ -49,9 +56,10 @@ function BlocPhotographe(number){
     let filtres = document.createElement('nav');
     filtres.className = "tagbypers"
     for ( let i = 0; i < data.photographers[number].tags.length; i++) {
-        let tag = document.createElement('span');
+        let tag = document.createElement('a');
         tag.textContent = "#" + data.photographers[number].tags[i].toLowerCase();
         tag.className = "tag tagf";
+        tag.ariaLabel = "tag";
         filtres.appendChild(tag);   
     }
     photographe.appendChild(divimg);
@@ -75,7 +83,8 @@ if (document.getElementById('titre').textContent == "FishEye"){
     creerblocs(nombredephotographes)
 }
 
-// Fonctionnalitée filtres 
+// fonctionnalitée filtres 
+
 let taglist = document.getElementsByClassName("tagclick");
 let tagneeded = [];
 let tagclicked = [];
@@ -136,10 +145,11 @@ function tagmanagement(filtersneeded) {
             let x = 0;
             for (let c = 0; c < a.length; c++){
                 for (let d = 0; d < filtersneeded.length; d++){
-                   if (a[c].textContent == filtersneeded[d]){
-                       x = 1; 
-                   }
-                }
+                    // eslint-disable-next-line max-depth
+                    if (a[c].textContent == filtersneeded[d]){
+                        x = 1; 
+                    }
+                 }
                 if (x == 1) {
                     blocfotodel[z].style.display = 'flex';
                 }
@@ -152,15 +162,7 @@ function tagmanagement(filtersneeded) {
 }
 
 // redirection au click
-
-let imageredirection = document.getElementsByClassName('blocphotographe');
-Array.from(imageredirection).forEach(function(element){
-    element.addEventListener('click', function(event){
-        window.open('./page-photographe.html' + '?' + event.currentTarget.getAttribute('data-idphotographers'), 'blank');
-     }, false)
-})
-
-window.addEventListener('scroll', function(event){
+window.addEventListener('scroll', function(){
     if(window.scrollY == 0){
         document.getElementById('ancreretour').style.display = 'none';
     }

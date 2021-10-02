@@ -1,6 +1,6 @@
 import data from "./data/data.json"
 
-let idduphotographe = window.location.search.substr(1);
+let idduphotographe = window.location.search.substr(1).split('&').find(element => element.indexOf('id') != -1).substr(3);
 let numeroduphotographe;
 
 for(let i = 0; i < data.photographers.length; i++) {
@@ -111,75 +111,65 @@ let orderphoto = 0;
 
 //  creation bloc principal
 
-data.media.forEach((item)=>{
-    if(item.photographerId == idduphotographe){
-        let blocphoto = document.createElement('article');
+function createBlocImageUnique(type, identity, order){
+    let imageDeTravail = data.media.find(x => x.id == identity)
+    let blocphoto = document.createElement('article');
         blocphoto.className = "blocphoto";
-        blocphoto.setAttribute('date', item.date)
-        blocphoto.style.order = orderphoto;
-        let divimgblocphoto = document.createElement('div');
+        blocphoto.setAttribute('date', imageDeTravail.date)
+        blocphoto.style.order = order;
+        let divimgblocphoto = document.createElement('a');
         divimgblocphoto.className = "divimgblocphoto";
-        if (item.image != undefined){
-            let imgblocphoto = document.createElement('img');
-            imgblocphoto.src = './images/' + prenomduphotographe + '/' + item.image;
+        let imgblocphoto = document.createElement('img');
+        var img = new Image();
+        img.onload = function() {
+            let imgwidth = this.width;
+            let imgheight = this.height;
+            let ratio = imgwidth / imgheight;
+            let pourcentagezoom = ratio * 100;
+            if (imgwidth > imgheight){
+                imgblocphoto.style.width = pourcentagezoom + '%';
+            }
+        }
+        if(type == 'image'){
+            imgblocphoto.src = './images/' + prenomduphotographe + '/' + imageDeTravail.image;
             imgblocphoto.className = 'imgbloc imgblocphoto';
-            imgblocphoto.setAttribute('video', 'no');
-            imgblocphoto.setAttribute('id', item.id);
-            divimgblocphoto.appendChild(imgblocphoto);
-            var img = new Image();
-            img.onload = function() {
-                let imgwidth = this.width;
-                let imgheight = this.height;
-                let ratio = imgwidth / imgheight;
-                let pourcentagezoom = ratio * 100;
-                if (imgwidth > imgheight){
-                    imgblocphoto.style.width = pourcentagezoom + '%';
-                }
-            }
-            img.src = './images/' + prenomduphotographe + '/' + item.image;
+            imgblocphoto.setAttribute('video', 'no')
+            img.src = './images/' + prenomduphotographe + '/' + imageDeTravail.image;
+        }  
+        if(type == 'video'){
+            imgblocphoto.src = './images/' + prenomduphotographe + '/' +imageDeTravail.video.replace('mp4','jpg');
+            imgblocphoto.className = 'imgbloc imgvideoblocphoto';
+            imgblocphoto.setAttribute('video', 'yes')
+            img.src = './images/' + prenomduphotographe + '/' + imageDeTravail.video.replace('mp4','jpg');
         }
-        else {
-            let imgvideoblocphoto = document.createElement('img');
-            imgvideoblocphoto.src = './images/' + prenomduphotographe + '/' +item.video.replace('mp4','jpg');
-            imgvideoblocphoto.className = 'imgbloc imgvideoblocphoto';
-            imgvideoblocphoto.setAttribute('video', 'yes')
-            imgvideoblocphoto.setAttribute('id', item.id);
-            divimgblocphoto.appendChild(imgvideoblocphoto);
-            var img = new Image();
-            img.onload = function() {
-                let imgwidth = this.width;
-                let imgheight = this.height;
-                let ratio = imgwidth / imgheight;
-                let pourcentagezoom = ratio * 100;
-                if (imgwidth > imgheight){
-                    imgvideoblocphoto.style.width = pourcentagezoom + '%';
-                }
-            }
-            img.src = './images/' + prenomduphotographe + '/' +item.video.replace('mp4','jpg');
-        }
+        imgblocphoto.setAttribute('id', identity);
+        divimgblocphoto.appendChild(imgblocphoto);
         let menuphoto = document.createElement('article');
         menuphoto.className = 'menuphoto';
         let nomphoto = document.createElement('p');
         nomphoto.className = 'nomphoto';
-        nomphoto.textContent = item.title;
+        nomphoto.textContent = imageDeTravail.title;
         let divlikes = document.createElement('div');
         divlikes.className = 'divlikes';
         let nblikes = document.createElement('p');
         nblikes.className = 'nblikes';
-        nblikes.textContent = item.likes;
+        nblikes.textContent = imageDeTravail.likes;
         let like = document.createElement('i');
         like.className = "far fa-heart iconecoeurclick";
         like.setAttribute('testclick', 'notclicked'); 
-        divlikes.appendChild(nblikes);
-        divlikes.appendChild(like);
-        menuphoto.appendChild(nomphoto);
-        menuphoto.appendChild(divlikes);
-        blocphoto.appendChild(divimgblocphoto);
-        blocphoto.appendChild(menuphoto)
+        divlikes.append(nblikes, like);
+        menuphoto.append(nomphoto, divlikes);
+        blocphoto.append(divimgblocphoto, menuphoto);
         document.getElementById('listephotos').appendChild(blocphoto);
-        orderphoto += 1;
-    }
-})    
+}
+
+data.media.filter(element => element.photographerId == idduphotographe).forEach(function(item){
+    let type;
+    if(item.image != undefined){type = 'image'}
+    else {type = 'video'}
+    createBlocImageUnique(type, item.id, orderphoto)
+    orderphoto += 1;
+})
 
 // fonctionnalités likes 
 
@@ -200,7 +190,7 @@ for (let i = 0; i < boutonsjaime.length; i++){
             boutonsjaime[i].style.fontWeight = '400';
         }
         revisionNombreDeJaimes()
-        if(document.getElementById('trieactuel').textContent = 'Popularité'){
+        if(document.getElementById('trieactuel').textContent == 'Popularité'){
                 for(let i=0; i < blocphoto.length; i++) {
                     classementnomphotos[i] = parseInt(listephotos.children[i].lastChild.lastChild.firstChild.textContent);
                 }
