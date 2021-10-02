@@ -1,7 +1,10 @@
+// importation des données json
 import data from "./data/data.json"
 
+// le nombre actuel de photographe ( peut être mis à jour ) 
 const nombredephotographes = 6;
 
+// fonction qui creer le header, avec le logo les liens et le h1
 function createHeader(){
     let tags = [];
     data.photographers.forEach((item)=>{
@@ -27,68 +30,53 @@ function createHeader(){
     header.appendChild(titre);
 }
 
+// definition de la fonction factoring qui créer un bloc quelconque
+
+function creerbloc(type, className, textContent){
+    let bloc = document.createElement(type);
+    bloc.className = className;
+    bloc.textContent = textContent;
+    return bloc;
+}
+
+// definition de la fonction factoring qui créer un bloc pour chaque photographe
 function BlocPhotographe(number){
-    let photographe = document.createElement('a');
-    photographe.className = "blocphotographe" ;
+    let photographe = creerbloc('a', 'blocphotographe');
     photographe.tabIndex = "0";
     photographe.href = './page-photographe.html?id=' + data.photographers[number].id;
     photographe.setAttribute('data-idPhotographers', data.photographers[number].id)
     photographe.ariaLabel = "Photographe" + data.photographers[number].name ;
-    let divimg = document.createElement('div');
-    divimg.className = "divimg"; 
-    let image = document.createElement('img');
+    let divimg = creerbloc('div', 'divimg');
+    let image = creerbloc('img', 'imageportrait');
     image.src = './images/photographers/' + data.photographers[number].portrait;
-    image.className = "imageportrait"
     image.alt = "portrait de" + data.photographers[number].name;
     divimg.appendChild(image); 
-    let prenom = document.createElement('p');
-    prenom.textContent = data.photographers[number].name;
-    prenom.className = "nom";
-    let lieu = document.createElement('p');
-    lieu.textContent = data.photographers[number].city + ", " + data.photographers[number].country;
-    lieu.className = "location";
-    let sentence = document.createElement('p');
-    sentence.textContent = data.photographers[number].tagline;
-    sentence.className = "phrase";
-    let prix = document.createElement('p');
-    prix.textContent = data.photographers[number].price + ' €';
-    prix.className = "tarif";
-    let filtres = document.createElement('nav');
-    filtres.className = "tagbypers"
+    let prenom = creerbloc('p', 'nom', data.photographers[number].name);
+    let lieu = creerbloc('p', 'location', data.photographers[number].city + ", " + data.photographers[number].country);
+    let sentence = creerbloc('p', "phrase", data.photographers[number].tagline);
+    let prix = creerbloc('p', 'tarif', data.photographers[number].price + ' €');
+    let filtres = creerbloc('nav', 'tagbypers');
     for ( let i = 0; i < data.photographers[number].tags.length; i++) {
-        let tag = document.createElement('a');
-        tag.textContent = "#" + data.photographers[number].tags[i].toLowerCase();
-        tag.className = "tag tagf";
-        tag.ariaLabel = "tag";
+        let tag = creerbloc('a', 'tag tagf', "#" + data.photographers[number].tags[i].toLowerCase());
         filtres.appendChild(tag);   
     }
-    photographe.appendChild(divimg);
-    photographe.appendChild(prenom);
-    photographe.appendChild(lieu);
-    photographe.appendChild(sentence);
-    photographe.appendChild(prix);
-    photographe.appendChild(filtres);
+    photographe.append(divimg, prenom, lieu, sentence, prix, filtres);
     document.getElementById('main').appendChild(photographe);
 }
 
-function creerblocs (nombredephotographes) {
-    for (let i = 0; i < nombredephotographes; i++){
-        BlocPhotographe(i)
-    }
+// Appel des fonction, on créer le header et tout le contenu de la page, de façon automatisée.
+createHeader() 
+for (let i = 0; i < nombredephotographes; i++){
+    BlocPhotographe(i)
 }
 
-// différenciation des pages html
-if (document.getElementById('titre').textContent == "FishEye"){
-    createHeader()
-    creerblocs(nombredephotographes)
-}
-
-// fonctionnalitée filtres 
+// fonctionnalitée filtres design au click sur chaque tag
 
 let taglist = document.getElementsByClassName("tagclick");
 let tagneeded = [];
 let tagclicked = [];
 for (let i = 0; i < taglist.length; i++) {
+    // fonctionnalités hoover
     taglist[i].addEventListener('mouseover', function(){
         taglist[i].style.backgroundColor = '#901C1C';
         taglist[i].style.color = 'white';
@@ -102,8 +90,7 @@ for (let i = 0; i < taglist.length; i++) {
         taglist[i].style.color = '#901C1C';
         }
     })
-}
-for (let i = 0; i < taglist.length; i++) {
+    // fonctionnalités click
     taglist[i].addEventListener('click', function(){
         if (tagclicked[i] == 0){
             taglist[i].style.backgroundColor = '#901C1C';
@@ -121,7 +108,7 @@ for (let i = 0; i < taglist.length; i++) {
     });
 } 
 
-// tags classement
+// Classement par tags, si le photographe à ou n'a pas tel ou tel tag
 
 function tagmanagement(filtersneeded) {
     let blocfotodel = document.getElementsByClassName('blocphotographe');
@@ -161,7 +148,7 @@ function tagmanagement(filtersneeded) {
     }
 }
 
-// redirection au click
+// Ancre de retour en haut de page
 window.addEventListener('scroll', function(){
     if(window.scrollY == 0){
         document.getElementById('ancreretour').style.display = 'none';

@@ -1,5 +1,7 @@
+// importation des données json
 import data from "./data/data.json"
 
+// on récupere l'id, le numéro et le prénom du photographe
 let idduphotographe = window.location.search.substr(1).split('&').find(element => element.indexOf('id') != -1).substr(3);
 let numeroduphotographe;
 
@@ -12,76 +14,59 @@ for(let i = 0; i < data.photographers.length; i++) {
 
 let prenomduphotographe = data.photographers[numeroduphotographe].name.split(" ")[0];
 
-function HeaderPhotographe(number){
-    let photographe = document.createElement('section');
-    photographe.className = "headerphotographe" ;
-    photographe.setAttribute('data-idPhotographers', data.photographers[number].id)
-    let divimg = document.createElement('div');
-    divimg.className = "divimg"; 
-    let image = document.createElement('img');
-    image.src = './images/photographers/' + data.photographers[number].portrait;
-    image.className = "imageportrait"
-    divimg.appendChild(image); 
-    let articlephotographe = document.createElement('article');
-    articlephotographe.className = 'articlephotographe';
-    let prenom = document.createElement('p');
-    prenom.textContent = data.photographers[number].name;
-    prenom.className = "nom";
-    let lieu = document.createElement('p');
-    lieu.textContent = data.photographers[number].city + ", " + data.photographers[number].country;
-    lieu.className = "location";
-    let sentence = document.createElement('p');
-    sentence.textContent = data.photographers[number].tagline;
-    sentence.className = "phrase";
-    let filtres = document.createElement('nav');
-    filtres.className = "tagbypers"
-    for ( let i = 0; i < data.photographers[number].tags.length; i++) {
-        let tag = document.createElement('span');
-        tag.textContent = "#" + data.photographers[number].tags[i].toLowerCase();
-        tag.className = "tags";
-        filtres.appendChild(tag);   
-    }
-    let divarticle = document.createElement('div');
-    divarticle.className = 'divarticle';
-    let boutoncontact = document.createElement('button');
-    boutoncontact.className = 'openmodal openmodalcontact';
-    boutoncontact.textContent = 'Contactez-Moi';
-    divarticle.appendChild(prenom);
-    divarticle.appendChild(lieu);
-    divarticle.appendChild(sentence);
-    divarticle.appendChild(filtres);
-    articlephotographe.appendChild(divarticle);
-    articlephotographe.appendChild(boutoncontact);
-    photographe.appendChild(articlephotographe);
-    photographe.appendChild(divimg);
-    document.getElementById('headermain').appendChild(photographe);
-    let modalmenu = document.createElement('div');
-    modalmenu.className = 'modalmenu';
-    let modaltitre = document.createElement('h1');
-    modaltitre.className = 'modaltitre';
-    modaltitre.textContent = 'Contactez-Moi';
-    let modalclose = document.createElement('span');
-    modalclose.className = 'modalclose';
-    modalmenu.appendChild(modaltitre);
-    modalmenu.appendChild(modalclose);
-    let modalnom = document.createElement('p');
-    modalnom.className = 'modalnom';
-    modalnom.textContent = data.photographers[number].name;
-    document.getElementById('contenermodaltexte').appendChild(modalmenu);
-    document.getElementById('contenermodaltexte').appendChild(modalnom);
+// definition de la fonction factoring qui créer un bloc quelconque
+function creerbloc(type, className, textContent){
+    let bloc = document.createElement(type);
+    bloc.className = className;
+    bloc.textContent = textContent;
+    return bloc;
 }
 
+// definition de la fonction pour créer le header
+function HeaderPhotographe(number){
+    let photographe = creerbloc('section', 'headerphotographe');
+    photographe.setAttribute('data-idPhotographers', data.photographers[number].id)
+    let divimg = creerbloc('div', 'divimg');
+    let image = creerbloc('img', 'imageportrait');
+    image.src = './images/photographers/' + data.photographers[number].portrait;
+    divimg.appendChild(image); 
+    let articlephotographe = creerbloc('article', 'articlephotographe');
+    let prenom = creerbloc('p', 'nom', data.photographers[number].name);
+    let lieu = creerbloc('p', 'location', data.photographers[number].city + ", " + data.photographers[number].country);
+    let sentence = creerbloc('p', 'phrase', data.photographers[number].tagline);
+    let filtres = creerbloc('nav', 'tagbypers');
+    for ( let i = 0; i < data.photographers[number].tags.length; i++) {
+        let tag = creerbloc('span', 'tags', "#" + data.photographers[number].tags[i].toLowerCase());
+        filtres.appendChild(tag);   
+    }
+    let divarticle = creerbloc('div', 'divarticle');
+    let boutoncontact = creerbloc('button', 'openmodal openmodalcontact', 'Contactez-Moi');
+    divarticle.append(prenom, lieu, sentence, filtres);
+    articlephotographe.append(divarticle, boutoncontact);
+    photographe.append(articlephotographe, divimg);
+    document.getElementById('headermain').appendChild(photographe);
+    let modalmenu = creerbloc('div', 'modalmenu');
+    let modaltitre = creerbloc('h1', 'modaltitre', 'Contactez-Moi');
+    let modalclose = creerbloc('span', 'modalclose');
+    modalmenu.append(modaltitre, modalclose);
+    let modalnom = creerbloc('p', 'modalnom', data.photographers[number].name);
+    document.getElementById('contenermodaltexte').append(modalmenu, modalnom);
+}
+
+// On appel la fonction pour créer le header 
 HeaderPhotographe(numeroduphotographe);
 
     
 // fonctionalités modals 
 
+// récupération des éléments de gestion des modals
 let modalbg = document.getElementById('modalbg');
 let openmodal = document.querySelectorAll(".openmodal");
 let fermerModal = document.querySelectorAll(".modalclose");
 let fermerModalImage = document.querySelectorAll(".modalimageclose");
 let modalimagebg = document.getElementById('modalimagebg');
 
+// fonctions d'ouverture et de fermeture des modals
 function launchModal() {
     modalbg.style.display = "flex";
 }
@@ -91,78 +76,83 @@ function CloseModal() {
 function CloseModalImage() {
     modalimagebg.style.display = "none";
 }
-function submit () {
-("Prénom : " + document.getElementById('first').value);
-("Nom : " + document.getElementById('last').value);
-("Email : " + document.getElementById('email').value);
-("Message : " + document.getElementById('message').value);
+
+// fonction de soumission du formulaire et d'affichage des réponses dans la console
+function submit() {
+    console.log("Prénom : " + document.getElementById('first').value);
+    console.log("Nom : " + document.getElementById('last').value);
+    console.log("Email : " + document.getElementById('email').value);
+    console.log("Message : " + document.getElementById('message').value);
     modalbg.style.display = "none";
 }
+
+// écoute d'evenement pour l'ouverture et la femeture des modals
 openmodal.forEach((btn) => btn.addEventListener("click", launchModal));
 fermerModal.forEach((btn) => btn.addEventListener("click", CloseModal));
 fermerModalImage.forEach((btn) => btn.addEventListener("click", CloseModalImage));
 
+// écoute d'évenement pour la soumission du formulaire
 document.getElementById('btn-submit').addEventListener('click', function (e) {
     e.preventDefault();
     submit();   
   })
 
+// déclaration de la variable définnissant l'ordre de chaque images  
 let orderphoto = 0;
 
-//  creation bloc principal
-
+// déclaration de la fonction factory pour créer un bloc image unique
 function createBlocImageUnique(type, identity, order){
     let imageDeTravail = data.media.find(x => x.id == identity)
-    let blocphoto = document.createElement('article');
-        blocphoto.className = "blocphoto";
-        blocphoto.setAttribute('date', imageDeTravail.date)
-        blocphoto.style.order = order;
-        let divimgblocphoto = document.createElement('a');
-        divimgblocphoto.className = "divimgblocphoto";
-        let imgblocphoto = document.createElement('img');
-        var img = new Image();
-        img.onload = function() {
-            let imgwidth = this.width;
-            let imgheight = this.height;
-            let ratio = imgwidth / imgheight;
-            let pourcentagezoom = ratio * 100;
-            if (imgwidth > imgheight){
-                imgblocphoto.style.width = pourcentagezoom + '%';
-            }
+    let blocphoto = creerbloc('article', 'blocphoto');
+    blocphoto.setAttribute('date', imageDeTravail.date)
+    blocphoto.style.order = order;
+    let divimgblocphoto = creerbloc('a', 'divimgblocphoto');
+    let imgblocphoto = document.createElement('img');
+
+    // la partie suivante sert a précharger les images et ainsi pouvoir définir leur height en avance
+    // ----------------------------------------------------------------------------------------------
+    var img = new Image();
+    img.onload = function() {
+        let imgwidth = this.width;
+        let imgheight = this.height;
+        let ratio = imgwidth / imgheight;
+        let pourcentagezoom = ratio * 100;
+        if (imgwidth > imgheight){
+            imgblocphoto.style.width = pourcentagezoom + '%';
         }
-        if(type == 'image'){
-            imgblocphoto.src = './images/' + prenomduphotographe + '/' + imageDeTravail.image;
-            imgblocphoto.className = 'imgbloc imgblocphoto';
-            imgblocphoto.setAttribute('video', 'no')
-            img.src = './images/' + prenomduphotographe + '/' + imageDeTravail.image;
-        }  
-        if(type == 'video'){
-            imgblocphoto.src = './images/' + prenomduphotographe + '/' +imageDeTravail.video.replace('mp4','jpg');
-            imgblocphoto.className = 'imgbloc imgvideoblocphoto';
-            imgblocphoto.setAttribute('video', 'yes')
-            img.src = './images/' + prenomduphotographe + '/' + imageDeTravail.video.replace('mp4','jpg');
-        }
-        imgblocphoto.setAttribute('id', identity);
-        divimgblocphoto.appendChild(imgblocphoto);
-        let menuphoto = document.createElement('article');
-        menuphoto.className = 'menuphoto';
-        let nomphoto = document.createElement('p');
-        nomphoto.className = 'nomphoto';
-        nomphoto.textContent = imageDeTravail.title;
-        let divlikes = document.createElement('div');
-        divlikes.className = 'divlikes';
-        let nblikes = document.createElement('p');
-        nblikes.className = 'nblikes';
-        nblikes.textContent = imageDeTravail.likes;
-        let like = document.createElement('i');
-        like.className = "far fa-heart iconecoeurclick";
-        like.setAttribute('testclick', 'notclicked'); 
-        divlikes.append(nblikes, like);
-        menuphoto.append(nomphoto, divlikes);
-        blocphoto.append(divimgblocphoto, menuphoto);
-        document.getElementById('listephotos').appendChild(blocphoto);
+    }
+    // ----------------------------------------------------------------------------------------------
+
+    // on regarde le type du media pour faire un replace si video
+    if(type == 'image'){
+        imgblocphoto.src = './images/' + prenomduphotographe + '/' + imageDeTravail.image;
+        imgblocphoto.className = 'imgbloc imgblocphoto';
+        imgblocphoto.setAttribute('video', 'no')
+        // src de l'image en préchargement 
+        img.src = './images/' + prenomduphotographe + '/' + imageDeTravail.image;
+    }  
+    if(type == 'video'){
+        imgblocphoto.src = './images/' + prenomduphotographe + '/' +imageDeTravail.video.replace('mp4','jpg');
+        imgblocphoto.className = 'imgbloc imgvideoblocphoto';
+        imgblocphoto.setAttribute('video', 'yes')
+        // src de l'image en préchargement 
+        img.src = './images/' + prenomduphotographe + '/' + imageDeTravail.video.replace('mp4','jpg');
+    }
+    imgblocphoto.setAttribute('id', identity);
+    divimgblocphoto.appendChild(imgblocphoto);
+    let menuphoto = creerbloc('article', 'menuphoto');
+    let nomphoto = creerbloc('p', 'nomphoto', imageDeTravail.title);
+    let divlikes = creerbloc('div', 'divlikes');
+    let nblikes = creerbloc('p', 'nblikes', imageDeTravail.likes);
+    let like = creerbloc('i', 'far fa-heart iconecoeurclick');
+    like.setAttribute('testclick', 'notclicked'); 
+    divlikes.append(nblikes, like);
+    menuphoto.append(nomphoto, divlikes);
+    blocphoto.append(divimgblocphoto, menuphoto);
+    document.getElementById('listephotos').appendChild(blocphoto);
 }
 
+// creation des blocs pour chaque photos en utilisant la fonction factory
 data.media.filter(element => element.photographerId == idduphotographe).forEach(function(item){
     let type;
     if(item.image != undefined){type = 'image'}
@@ -171,77 +161,25 @@ data.media.filter(element => element.photographerId == idduphotographe).forEach(
     orderphoto += 1;
 })
 
-// fonctionnalités likes 
-
-let like_a_incrementer = document.getElementsByClassName('nblikes');
-let boutonsjaime = document.getElementsByClassName('iconecoeurclick');
-for (let i = 0; i < boutonsjaime.length; i++){
-    boutonsjaime[i].addEventListener('click', function(event){
-        if (boutonsjaime[i].getAttribute('testclick') == "notclicked"){
-            let nombreaugmenter = parseInt(like_a_incrementer[i].textContent) + 1;
-            like_a_incrementer[i].textContent = nombreaugmenter;
-            boutonsjaime[i].setAttribute('testclick', 'clicked')
-            boutonsjaime[i].style.fontWeight = '800';
-        }
-        else {
-            let nombrediminuer = parseInt(like_a_incrementer[i].textContent) - 1;
-            like_a_incrementer[i].textContent = nombrediminuer;
-            boutonsjaime[i].setAttribute('testclick', 'notclicked')
-            boutonsjaime[i].style.fontWeight = '400';
-        }
-        revisionNombreDeJaimes()
-        if(document.getElementById('trieactuel').textContent == 'Popularité'){
-                for(let i=0; i < blocphoto.length; i++) {
-                    classementnomphotos[i] = parseInt(listephotos.children[i].lastChild.lastChild.firstChild.textContent);
-                }
-                classementnomphotos.sort(compare).reverse();
-                classementnomphotos.forEach(function (valeur, index){
-                    for(let i=0; i < blocphoto.length; i++){
-                        if(blocphoto[i].lastChild.lastChild.firstChild.textContent == valeur){
-                            blocphoto[i].style.order = index;
-                        }
-                    }
-                })
-                trieactuel.textContent = "Popularité";
-                document.getElementById('triechoix').style.display = "none"; 
-                document.getElementById('choixactuel').style.display = "flex";
-                pasdedouble();
-                popularite.style.order = 0;
-                titre.style.order = 2;
-                date.style.order = 1;
-                document.getElementById('popularite').classList.remove('choixinverse');
-                document.getElementById('date').classList.remove('choixinverse');
-                location.href= '#' + event.path[3].firstChild.firstChild.getAttribute('id');
-            }
-        }
-    );
-}
-
-// création banière
-
-let banfoot = document.createElement('div');
-let banfootleft = document.createElement('div');
-banfootleft.className = 'banfootleft';
-banfoot.className = 'banfoot';
+// création de la banière en bas
+let banfoot = creerbloc('div', 'banfoot');
+let banfootleft = creerbloc('div', 'banfootleft');
 let nombredejaimetotaletexte = document.createElement('p')
 let nombredejaimetotal = 0;
 nombredejaimetotaletexte.setAttribute('id', 'nombredejaimetotaltexte')
 let array = document.getElementsByClassName('nblikes');
+// calcul du nombe de j'aimes totales du photographe
 for(let i = 0; i < array.length; i++){
     nombredejaimetotal += parseInt(array[i].textContent);
 }
-let coeurnombredejaimetotale = document.createElement('i');
-coeurnombredejaimetotale.className = 'far fa-heart coeurjaimestotal'
+let coeurnombredejaimetotale = creerbloc('i', 'far fa-heart coeurjaimestotal');
 nombredejaimetotaletexte.textContent = nombredejaimetotal;
-let banfootright = document.createElement('p');
-banfootright.className = 'prixduphotographe';
-banfootright.textContent = data.photographers[numeroduphotographe].price + '€ / jour'
-banfootleft.appendChild(nombredejaimetotaletexte);
-banfootleft.appendChild(coeurnombredejaimetotale);
-banfoot.appendChild(banfootleft);
-banfoot.appendChild(banfootright);
+let banfootright = creerbloc('p', 'prixduphotographe', data.photographers[numeroduphotographe].price + '€ / jour');
+banfootleft.append(nombredejaimetotaletexte, coeurnombredejaimetotale);
+banfoot.append(banfootleft, banfootright);
 document.getElementById('main').appendChild(banfoot);
 
+// fonction de mise à jour du nombre de j'aime total
 function revisionNombreDeJaimes(){
     let tableau = document.getElementsByClassName('nblikes');
     let nombredejaimetotaletexterevision = document.getElementById('nombredejaimetotaltexte');
@@ -254,6 +192,7 @@ function revisionNombreDeJaimes(){
 
 // fonctionnalité modal affichage de photo une à une 
 
+// récupération des élements 
 let blocphoto = document.getElementsByClassName('blocphoto')
 let blocphotounique = document.getElementsByClassName('imgbloc');
 let imagephotoactuel = document.getElementById('imagephotoactuel');
@@ -263,13 +202,15 @@ let videoactuelle = document.getElementById('videoactuelle');
 let pointeuractuel;
 let next = document.getElementById('next');
 let previous = document.getElementById('previous');
+
+// écoute du clique sur une image pour ouvrir la lightox
 for (let i = 0; i < blocphotounique.length; i++){
     blocphotounique[i].addEventListener('click', function(event){
         event.preventDefault();
         event.stopPropagation();
         modalimagebg.style.display = "flex";
-        imagephotoactuel.src = event.target.src;
         textephotoactuel.textContent = nomphotoactuel[i].textContent;
+        // le pointeur actuel pointe sur l'ordre de l'image actuellement affichée, on test si il est égal à 0 ou au maximum
         pointeuractuel = parseInt(blocphoto[i].style.order);
         if (pointeuractuel == 0){
             previous.style.display = "none";
@@ -283,6 +224,7 @@ for (let i = 0; i < blocphotounique.length; i++){
         else {
             next.style.display = "flex";
         }
+        // on regarde si le media est une vidéo ou une photo
         if(blocphotounique[i].getAttribute('video') == "yes" ){
             imagephotoactuel.src = "";
             imagephotoactuel.style.display = "none";
@@ -299,14 +241,17 @@ for (let i = 0; i < blocphotounique.length; i++){
     })
 }
 
-// clique previous next
+// Fonctionnalité de navigation au click sur les élement previous et next de la lightbox
 
+// Ecoute du click sur les éléments next et previous de la lightbox
 next.addEventListener('click', function(event){
     event.stopPropagation();
     event.preventDefault();
+    // determination du bloc suivant pour recuperer le lien de son image
     let findvaleurnext = Array.from(blocphoto).find(function(element){
         return element.style.order == pointeuractuel + 1;
     })
+    // test video/image
     if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "no"){
         imagephotoactuel.src = findvaleurnext.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
@@ -320,6 +265,7 @@ next.addEventListener('click', function(event){
         videoactuelle.style.display = "flex";
         videoactuelle.style.maxHeight = window.innerHeight - 80;
     }
+    // mise à jour de la lightbox
     textephotoactuel.textContent = findvaleurnext.lastChild.firstChild.textContent;
     pointeuractuel += 1;
     previous.style.display = "flex";
@@ -331,9 +277,11 @@ next.addEventListener('click', function(event){
 previous.addEventListener('click', function(event){
     event.stopPropagation();
     event.preventDefault();
+    // determination du bloc suivant pour recuperer le lien de son image
     let findvaleurprevious = Array.from(blocphoto).find(function(element){
     return element.style.order == pointeuractuel - 1;
     })
+    // test video/image
     if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "no"){
         imagephotoactuel.src = findvaleurprevious.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
@@ -347,6 +295,7 @@ previous.addEventListener('click', function(event){
         videoactuelle.style.display = "flex";
         videoactuelle.style.maxHeight = window.innerHeight - 80;
     }
+    // mise à jour de la lightbox
     textephotoactuel.textContent = findvaleurprevious.lastChild.firstChild.textContent;
     pointeuractuel -= 1;
     next.style.display = "flex";
@@ -355,18 +304,23 @@ previous.addEventListener('click', function(event){
     }
 })
 
-// trie fonctionalités 
+// Fonctionnalités des boutons de trie
 
+// récupération des éléments nécessaires
 let triechoix = document.getElementById('triechoix');
 let choixactuel = document.getElementById('choixactuel');
 let trieactuel = document.getElementById('trieactuel');
 let chevronup = document.getElementById('chevronup');
+
+// écoute du click pour ouvrir le module de choix
 choixactuel.addEventListener('click', function(event){
     event.preventDefault();
     event.stopPropagation();
     triechoix.style.display = "flex";
     choixactuel.style.display = "none";
 })
+
+// écoute du click pour fermer le module de choix
 chevronup.addEventListener('click', function(event){
     event.preventDefault();
     event.stopPropagation();
@@ -374,87 +328,19 @@ chevronup.addEventListener('click', function(event){
     choixactuel.style.display = "flex";
 })
 
-// trie algorythme par titre 
-
+// définition des éléments nécessaires pour les fonctions et les écoute des évenements à suivre
 let listephotos = document.getElementById('listephotos');
 let classementnomphotos = [];
 let popularite = document.getElementById('popularite');
 let titre = document.getElementById('titrechoix');
 let date = document.getElementById('date');
 
+// On utilise cette fonction dans la fonctiond de trie par popularité pour pouvoir trier un tableau par ordre croissant 
 function compare(x, y) {
     return x - y;
 }
 
-popularite.addEventListener('click', function(){
-    for(let i=0; i < blocphoto.length; i++) {
-        classementnomphotos[i] = parseInt(listephotos.children[i].lastChild.lastChild.firstChild.textContent);
-    }
-    classementnomphotos.sort(compare).reverse();
-    classementnomphotos.forEach(function (valeur, index){
-        for(let i=0; i < blocphoto.length; i++){
-            if(blocphoto[i].lastChild.lastChild.firstChild.textContent == valeur){
-                blocphoto[i].style.order = index;
-            }
-        }
-    })
-    trieactuel.textContent = "Popularité";
-    document.getElementById('triechoix').style.display = "none"; 
-    document.getElementById('choixactuel').style.display = "flex";
-    pasdedouble();
-    popularite.style.order = 0;
-    titre.style.order = 2;
-    date.style.order = 1;
-    document.getElementById('popularite').classList.remove('choixinverse');
-    document.getElementById('date').classList.remove('choixinverse');
-});
-
-titre.addEventListener('click', function(){
-    for(let i=0; i < blocphoto.length; i++) {
-        classementnomphotos[i] = listephotos.children[i].lastChild.firstChild.textContent;
-    }
-    classementnomphotos.sort();
-    classementnomphotos.forEach(function (valeur, index){
-        for(let i=0; i < blocphoto.length; i++){
-            if(blocphoto[i].lastChild.firstChild.textContent == valeur){
-                blocphoto[i].style.order = index;
-            }
-        }
-    })
-    trieactuel.textContent = "Titre"; 
-    document.getElementById('triechoix').style.display = "none"; 
-    document.getElementById('choixactuel').style.display = "flex";
-    pasdedouble();
-    popularite.style.order = 1;
-    titre.style.order = 0;
-    date.style.order = 2;
-    popularite.className += ' choixinverse';
-    date.className += ' choixinverse';
-});
-
-date.addEventListener('click', function(){
-    for(let i=0; i < blocphoto.length; i++) {
-        classementnomphotos[i] = listephotos.children[i].getAttribute('date').replace('-', '').replace('-', '');
-    }
-    classementnomphotos.sort();
-    classementnomphotos.forEach(function (valeur, index){
-        for(let i=0; i < blocphoto.length; i++){
-            if(blocphoto[i].getAttribute('date').replace('-', '').replace('-', '') == valeur){
-                blocphoto[i].style.order = index;
-            }
-        }
-    })
-    trieactuel.textContent = "Date"; 
-    document.getElementById('triechoix').style.display = "none"; 
-    document.getElementById('choixactuel').style.display = "flex";
-    pasdedouble();
-    popularite.style.order = 1;
-    titre.style.order = 2;
-    date.style.order = 0;
-    document.getElementById('popularite').classList.remove('choixinverse');
-    document.getElementById('date').classList.remove('choixinverse');
-});
-   
+// définition de la fonction pas de double, cette fonction sert a s'assurer que deux éléments n'ait pas le même order
 function pasdedouble(){
     let tableauverif = [];
     for(let i=0; i < listephotos.children.length; i++){
@@ -470,4 +356,132 @@ function pasdedouble(){
     }
 }
 
+// Définition des fonctions de trie, elles marchent sur le même principe
 
+// définition de la fonction qui trie les éléments par popularité
+function triParPopularité(){
+    for(let i=0; i < blocphoto.length; i++) {
+        classementnomphotos[i] = parseInt(listephotos.children[i].lastChild.lastChild.firstChild.textContent);
+    }
+    classementnomphotos.sort(compare).reverse();
+    classementnomphotos.forEach(function (valeur, index){
+        for(let i=0; i < blocphoto.length; i++){
+            if(blocphoto[i].lastChild.lastChild.firstChild.textContent == valeur){
+                blocphoto[i].style.order = index;
+            }
+        }
+    })
+}
+
+// définition de la fonction qui trie les éléments par titre 
+function triParTitre(){
+    for(let i=0; i < blocphoto.length; i++) {
+        classementnomphotos[i] = listephotos.children[i].lastChild.firstChild.textContent;
+    }
+    classementnomphotos.sort();
+    classementnomphotos.forEach(function (valeur, index){
+        for(let i=0; i < blocphoto.length; i++){
+            if(blocphoto[i].lastChild.firstChild.textContent == valeur){
+                blocphoto[i].style.order = index;
+            }
+        }
+    })
+}
+
+// définition de la fonction qui trie les éléments par date
+function triParDate(){
+    for(let i=0; i < blocphoto.length; i++) {
+        classementnomphotos[i] = listephotos.children[i].getAttribute('date').replace('-', '').replace('-', '');
+    }
+    classementnomphotos.sort();
+    classementnomphotos.forEach(function (valeur, index){
+        for(let i=0; i < blocphoto.length; i++){
+            if(blocphoto[i].getAttribute('date').replace('-', '').replace('-', '') == valeur){
+                blocphoto[i].style.order = index;
+            }
+        }
+    })
+}
+
+// fonction qui gère l'affichage du menu déroulant de trie
+function trieAffichage(actual){
+    document.getElementById('triechoix').style.display = "none"; 
+    document.getElementById('choixactuel').style.display = "flex";
+    trieactuel.textContent = actual;
+    if(actual == 'Popularité' || actual == 'Date'){
+        document.getElementById('popularite').classList.remove('choixinverse');
+        document.getElementById('date').classList.remove('choixinverse');
+    }
+    else {
+        popularite.className += ' choixinverse';
+        date.className += ' choixinverse';
+    }
+}
+
+// écoute de l'évenement pour trier par popularité, par date ou par titre
+popularite.addEventListener('click', function(){
+    trieAffichage('Popularité')
+    triParPopularité()
+    pasdedouble();
+    popularite.style.order = 0;
+    titre.style.order = 2;
+    date.style.order = 1;
+});
+
+titre.addEventListener('click', function(){
+    trieAffichage('Titre')
+    triParTitre();
+    pasdedouble();
+    popularite.style.order = 1;
+    titre.style.order = 0;
+    date.style.order = 2;
+});
+
+date.addEventListener('click', function(){
+    trieAffichage('Date')
+    triParDate();
+    pasdedouble();
+    popularite.style.order = 1;
+    titre.style.order = 2;
+    date.style.order = 0;
+});
+
+
+// fonctionnalités likes
+
+// variable contenant le nombre de jaimes de chaque classe et le pointeur vers l'élément cliqué
+let like_a_incrementer = document.getElementsByClassName('nblikes');
+let boutonsjaime = document.getElementsByClassName('iconecoeurclick');
+
+// On écoute l'évenement clique sur le coeur cliquable de chaque image
+for (let i = 0; i < boutonsjaime.length; i++){
+    boutonsjaime[i].addEventListener('click', function(event){
+        // On test si le coeur était déjà cliqué ou non et on change son style en conséquence
+        if (boutonsjaime[i].getAttribute('testclick') == "notclicked"){
+            let nombreaugmenter = parseInt(like_a_incrementer[i].textContent) + 1;
+            like_a_incrementer[i].textContent = nombreaugmenter;
+            boutonsjaime[i].setAttribute('testclick', 'clicked')
+            boutonsjaime[i].style.fontWeight = '800';
+        }
+        else {
+            let nombrediminuer = parseInt(like_a_incrementer[i].textContent) - 1;
+            like_a_incrementer[i].textContent = nombrediminuer;
+            boutonsjaime[i].setAttribute('testclick', 'notclicked')
+            boutonsjaime[i].style.fontWeight = '400';
+        }
+        // On met à jour la variable contenant le nombre total de j'aimes
+        revisionNombreDeJaimes()
+
+        // On test si les photos sont actuellement trié par nombre de j'aimes
+        if(document.getElementById('trieactuel').textContent == 'Popularité'){
+        // si c'est le cas, on met à jour le classement des images par nombre de j'aimes et on s'assure qu'il n'y ait pas de double order
+            triParPopularité()
+            pasdedouble();
+            // et on va vers l'image sur laquelle on a cliqué car si il y a eu un changement d'ordrel'image peut ne plus être centré
+            location.href= '#' + event.path[3].firstChild.firstChild.getAttribute('id');
+        }
+    }
+);}
+
+// par défaut, les images seront classés par leur nombre de j'aimes
+triParPopularité()
