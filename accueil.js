@@ -4,6 +4,15 @@ import data from "./data/data.json"
 // le nombre actuel de photographe ( peut être mis à jour ) 
 const nombredephotographes = 6;
 
+// definition de la fonction factoring qui créer un bloc quelconque
+
+function creerbloc(type, className, textContent){
+    let bloc = document.createElement(type);
+    bloc.className = className;
+    bloc.textContent = textContent;
+    return bloc;
+}
+
 // fonction qui creer le header, avec le logo les liens et le h1
 function createHeader(){
     let tags = [];
@@ -14,30 +23,16 @@ function createHeader(){
 ]
     })
     tags = [...new Set(tags)];
-    var nav = document.createElement('nav');
-    nav.className = "listetags";
+    var nav = creerbloc('nav', 'listetags');
     var header = document.getElementById('header');
-    var titre = document.createElement('h1');
-    titre.textContent = "Nos Photographes";
+    var titre = creerbloc('h1', '', "Nos Photographes");
     tags.forEach(function(item){
-        var createtag = document.createElement('a');
-        createtag.className = "tag tagclick";
-        createtag.textContent = "#" + item;
+        var createtag = creerbloc('a', 'tag tagclick', '#' + item);
         createtag.tabIndex = "inherit";
         createtag.ariaLabel = 'tag ' + item;
         nav.appendChild(createtag);
     })
-    header.appendChild(nav);
-    header.appendChild(titre);
-}
-
-// definition de la fonction factoring qui créer un bloc quelconque
-
-function creerbloc(type, className, textContent){
-    let bloc = document.createElement(type);
-    bloc.className = className;
-    bloc.textContent = textContent;
-    return bloc;
+    header.append(nav, titre);
 }
 
 // definition de la fonction factoring qui créer un bloc pour chaque photographe
@@ -71,92 +66,62 @@ for (let i = 0; i < nombredephotographes; i++){
     BlocPhotographe(i)
 }
 
-// fonctionnalitée filtres design au click sur chaque tag
+// fonction qui gere le style des tags et le clique dessus
+function siCliquer(i, couleurfond, couleur, isclicked, aria, content){
+    taglist[i].style.backgroundColor = couleurfond;
+    taglist[i].style.color = couleur;
+    tagclicked[i] = isclicked;
+    taglist[i].ariaLabel = aria;
+    tagneeded[i] = content;
+}
 
+// fonctionnalitée filtres design au click sur chaque tag
 let taglist = document.getElementsByClassName("tagclick");
 let tagneeded = [];
 let tagclicked = [];
 for (let i = 0; i < taglist.length; i++) {
-    tagclicked[i] = 0
-    // fonctionnalités hoover
-    taglist[i].addEventListener('mouseover', function(){
-        taglist[i].style.backgroundColor = '#901C1C';
-        taglist[i].style.color = 'white';
-    })
-    taglist[i].addEventListener('mouseout', function(){
-        if (tagclicked[i] != 1) {
-        taglist[i].style.backgroundColor = 'white';
-        taglist[i].style.color = '#901C1C';
-        }
-    })
+    tagclicked[i] = 0;
     // fonctionnalités click
     taglist[i].addEventListener('click', function(){
-        console.log('appeller')
-        if (tagclicked[i] == 0){
-            taglist[i].style.backgroundColor = '#901C1C';
-            taglist[i].style.color = 'white';
-            tagclicked[i] = 1;
-            taglist[i].ariaLabel = 'tag ' + taglist[i].textContent.substr(1) + ' actif'
-            tagneeded[i] = taglist[i].textContent;
-            tagmanagement(tagneeded);
-        }
-        else if (tagclicked[i] == 1){
-            taglist[i].style.backgroundColor = 'white';
-            taglist[i].style.color = '#901C1C'
-            tagclicked[i] = 0;
-            tagneeded[i] = 0;
-            taglist[i].ariaLabel = 'tag' + taglist[i].textContent.substr(1)
+        if (tagclicked[i] == 0) siCliquer(i, '#901C1C', 'white', 1, 'tag ' + taglist[i].textContent.substr(1) + ' actif', taglist[i].textContent)
+        else if (tagclicked[i] == 1) siCliquer(i, '', '', 0, 'tag' + taglist[i].textContent.substr(1), 0)
+        tagmanagement(tagneeded);
+    });
+    taglist[i].addEventListener('keydown', function(event){
+        if(event.key == 'Enter') {
+            if (tagclicked[i] == 0) siCliquer(i, '#901C1C', 'white', 1, 'tag ' + taglist[i].textContent.substr(1) + ' actif', taglist[i].textContent)
+            else if (tagclicked[i] == 1) siCliquer(i, '', '', 0, 'tag' + taglist[i].textContent.substr(1), 0)
             tagmanagement(tagneeded);
         }
     });
 } 
 
 // Classement par tags, si le photographe à ou n'a pas tel ou tel tag
-
 function tagmanagement(filtersneeded) {
     let blocfotodel = document.getElementsByClassName('blocphotographe');
     let g = document.getElementsByClassName('tagf');
     let r = 0;
-    for(let s = 0; s < g.length; s++){
-        for(let t = 0; t < filtersneeded.length; t++){
-            if (g[s].textContent == filtersneeded[t]){
-                r = 1;
-            }
-        }
-    }
-    if (r == 0){
-        for (let u = 0; u < blocfotodel.length; u++){
-            blocfotodel[u].style.display = 'flex';
-        }
-    }
+    Array.from(g).forEach(function(item){
+        if(filtersneeded.find(element => element == item.textContent) != undefined) r = 1;
+    })
+    if (r == 0) Array.from(blocfotodel).forEach(item => item.style.display = 'flex');
     else {
         for (let z = 0; z < blocfotodel.length; z++){
             let a = blocfotodel[z].getElementsByClassName('tagf');
             let x = 0;
             for (let c = 0; c < a.length; c++){
                 for (let d = 0; d < filtersneeded.length; d++){
-                    // eslint-disable-next-line max-depth
-                    if (a[c].textContent == filtersneeded[d]){
-                        x = 1; 
-                    }
+                    if (a[c].textContent == filtersneeded[d]) x = 1; 
                  }
-                if (x == 1) {
-                    blocfotodel[z].style.display = 'flex';
-                }
-                else {
-                    blocfotodel[z].style.display = 'none';
-                }
+                if (x == 1) blocfotodel[z].style.display = 'flex';
+                else blocfotodel[z].style.display = 'none';
             }
         }
-    }
+    }    
 }
 
 // Ancre de retour en haut de page
 window.addEventListener('scroll', function(){
-    if(window.scrollY == 0){
-        document.getElementById('ancreretour').style.display = 'none';
-    }
-    else if(window.scrollY > 0){
-        document.getElementById('ancreretour').style.display = 'block';
-    }
+    if(window.scrollY == 0) document.getElementById('ancreretour').style.display = 'none';
+    else if(window.scrollY > 0) document.getElementById('ancreretour').style.display = 'block';
 })

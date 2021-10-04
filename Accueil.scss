@@ -133,7 +133,10 @@ header h1 {
   }
 }
 
-
+.tagclick:hover {
+  background-color: $couleurprimary;
+  color: white;
+}
 
 .imageportrait {
   width: 100%;

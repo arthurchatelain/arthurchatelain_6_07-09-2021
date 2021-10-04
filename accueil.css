@@ -125,6 +125,11 @@ header h1 {
   display: flex;
 }
 
+.tagclick:hover {
+  background-color: #901C1C;
+  color: white;
+}
+
 .imageportrait {
   width: 100%;
 }

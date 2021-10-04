@@ -3,18 +3,15 @@ import data from "./data/data.json"
 
 // on récupere l'id, le numéro et le prénom du photographe
 let idduphotographe = window.location.search.substr(1).split('&').find(element => element.indexOf('id') != -1).substr(3);
-let numeroduphotographe;
 
+let numeroduphotographe;
 for(let i = 0; i < data.photographers.length; i++) {
-    if (data.photographers[i].id == idduphotographe){
-        numeroduphotographe = i;
-        break;
-    }
+    if (data.photographers[i].id == idduphotographe) numeroduphotographe = i;
 }
 
 let prenomduphotographe = data.photographers[numeroduphotographe].name.split(" ")[0];
 
-// definition de la fonction factoring qui créer un bloc quelconque
+// definition de la fonction factory qui créer un bloc quelconque
 function creerbloc(type, className, textContent){
     let bloc = document.createElement(type);
     bloc.className = className;
@@ -57,7 +54,7 @@ function HeaderPhotographe(number){
     let modaltitre = creerbloc('h1', 'modaltitre', 'Contactez-Moi');
     let modalclose = creerbloc('span', 'modalclose');
     modalclose.id = 'modalclose';
-    modalclose.tabIndex = '1';
+    rendreaccessible(modalclose, 'Fermer le modal de contact');
     modalmenu.append(modaltitre, modalclose);
     let modalnom = creerbloc('p', 'modalnom', data.photographers[number].name);
     document.getElementById('contenermodaltexte').append(modalmenu, modalnom);
@@ -66,7 +63,7 @@ function HeaderPhotographe(number){
 // On appel la fonction pour créer le header 
 HeaderPhotographe(numeroduphotographe);
 
-// fonctionalités modals 
+// FONCTIONNALITES MODALS
 
 // récupération des éléments de gestion des modals
 let modalbg = document.getElementById('modalbg');
@@ -76,17 +73,18 @@ let fermerModalImage = document.getElementById("modalimageclose");
 let modalimagebg = document.getElementById('modalimagebg');
 
 // fonctions d'ouverture et de fermeture des modals
-
 function launchModal() {
     modalbg.style.display = "flex";
 }
 
 function CloseModal() {
     modalbg.style.display = "none";
+    document.getElementById('choixactuel').focus()
 }
 
 function CloseModalImage() {
     lightbox("none", "flex");
+    document.getElementById('choixactuel').focus()
 }
 
 // fonction de soumission du formulaire et d'affichage des réponses dans la console
@@ -98,25 +96,19 @@ function submit() {
     modalbg.style.display = "none";
 }
 
-// écoute d'evenement pour l'ouverture et la femeture des modals
+// écoutes d'evenement pour l'ouverture et la femeture des modals
 openmodal.addEventListener("click", launchModal);
 fermerModal.addEventListener("click", CloseModal);
 fermerModal.addEventListener("keydown", function(event){
-    if(event.key == 'Enter'){
-        CloseModal();
-        document.getElementById('choixactuel').focus()
-    }
+    if(event.key == 'Enter') CloseModal();
 });
 fermerModalImage.addEventListener("click", CloseModalImage);
 fermerModalImage.addEventListener("keydown", function(event){
-    if(event.key == 'Enter'){
-        CloseModalImage();
-        document.getElementById('choixactuel').focus()
-    }
+    if(event.key == 'Enter') CloseModalImage();
 });
 
 // écoute d'évenement pour la soumission du formulaire
-document.getElementById('btn-submit').addEventListener('click', function (e) {
+document.getElementById('btn-submit').addEventListener('click', function(e) {
     e.preventDefault();
     submit();   
   })
@@ -132,9 +124,9 @@ function createBlocImageUnique(type, identity, order){
     blocphoto.style.order = order;
     let divimgblocphoto = creerbloc('a', 'divimgblocphoto');
     divimgblocphoto.ariaLabel = imageDeTravail["alt-text"]
-    let imgblocphoto = document.createElement('img');
     divimgblocphoto.tabIndex = order + 2;
-
+    let imgblocphoto = document.createElement('img');
+    
     // la partie suivante sert a précharger les images et ainsi pouvoir définir leur height en avance
     // ----------------------------------------------------------------------------------------------
     var img = new Image();
@@ -143,9 +135,7 @@ function createBlocImageUnique(type, identity, order){
         let imgheight = this.height;
         let ratio = imgwidth / imgheight;
         let pourcentagezoom = ratio * 100;
-        if (imgwidth > imgheight){
-            imgblocphoto.style.width = pourcentagezoom + '%';
-        }
+        if (imgwidth > imgheight) imgblocphoto.style.width = pourcentagezoom + '%';
     }
     // ----------------------------------------------------------------------------------------------
 
@@ -184,8 +174,8 @@ function createBlocImageUnique(type, identity, order){
 // creation des blocs pour chaque photos en utilisant la fonction factory
 data.media.filter(element => element.photographerId == idduphotographe).forEach(function(item){
     let type;
-    if(item.image != undefined){type = 'image'}
-    else {type = 'video'}
+    if(item.image != undefined) type = 'image'
+    else type = 'video'
     createBlocImageUnique(type, item.id, orderphoto)
     orderphoto += 1;
 })
@@ -235,7 +225,6 @@ let previous = document.getElementById('previous');
 
 
 // fonction qui active désactive la lightbox 
-
 function lightbox(open, close){
     document.getElementById('header').style.display = close;
     modalimagebg.style.display = open;
@@ -246,59 +235,52 @@ function lightbox(open, close){
     })
 }
 
-// fonction d'ouverture de la lightbox 
+// fonction qui test si video ou non
+function isvideo(type){
+    if (type == "video"){
+        videoactuelle.style.maxHeight = window.innerHeight - 80;
+        imagephotoactuel.style.display = "none";
+        videoactuelle.style.display = "flex";
+    }
+    else if (type == "image"){
+        videoactuelle.style.display = "none";
+        imagephotoactuel.style.maxHeight = window.innerHeight - 80;
+        imagephotoactuel.style.display = "flex";
+    }
+}
 
+// fonction d'ouverture de la lightbox 
 function openlightbox(event, i){
     event.preventDefault()
     event.stopPropagation()
-        lightbox("flex", "none")
-        textephotoactuel.textContent = nomphotoactuel[i].textContent;
-        // le pointeur actuel pointe sur l'ordre de l'image actuellement affichée, on test si il est égal à 0 ou au maximum
-        pointeuractuel = parseInt(blocphoto[i].style.order);
-        if (pointeuractuel == 0){
-            previous.style.display = "none";
-        }
-        else {
-            previous.style.display = "flex";
-        }
-        if (pointeuractuel == blocphotounique.length - 1){
-            next.style.display = "none";
-        }
-        else {
-            next.style.display = "flex";
-        }
-        // on regarde si le media est une vidéo ou une photo
-        if(blocphotounique[i].getAttribute('video') == "yes" ){
-            imagephotoactuel.src = "";
-            imagephotoactuel.style.display = "none";
-            videoactuelle.style.display = "flex";
-            videoactuelle.src = blocphotounique[i].src.replace('jpg', 'mp4')
-            videoactuelle.style.maxHeight = window.innerHeight - 80;
-            videoactuelle.setAttribute('title', 'video ' + divblocphotounique[i].ariaLabel)
-        }
-        if(blocphotounique[i].getAttribute('video') == "no" ){
-            imagephotoactuel.src = blocphotounique[i].src;
-            imagephotoactuel.style.display = "flex";
-            videoactuelle.style.display = "none";
-            imagephotoactuel.style.maxHeight = window.innerHeight - 80;
-            imagephotoactuel.setAttribute('alt', divblocphotounique[i].ariaLabel)
-        }
+    lightbox("flex", "none")
+    textephotoactuel.textContent = nomphotoactuel[i].textContent;
+    // le pointeur actuel pointe sur l'ordre de l'image actuellement affichée, on test si il est égal à 0 ou au maximum
+    pointeuractuel = parseInt(blocphoto[i].style.order);
+    if (pointeuractuel == 0) previous.style.display = "none";
+    else previous.style.display = "flex";
+    if (pointeuractuel == blocphotounique.length - 1) next.style.display = "none";
+    else next.style.display = "flex";
+    // on regarde si le media est une vidéo ou une photo
+    if(blocphotounique[i].getAttribute('video') == "yes" ){
+        isvideo('video')
+        videoactuelle.src = blocphotounique[i].src.replace('jpg', 'mp4')
+        videoactuelle.setAttribute('title', 'video ' + divblocphotounique[i].ariaLabel)
+    }
+    if(blocphotounique[i].getAttribute('video') == "no" ){
+        isvideo('image')
+        imagephotoactuel.src = blocphotounique[i].src;
+        imagephotoactuel.setAttribute('alt', divblocphotounique[i].ariaLabel)
+    }
 }
 
 // écoute du clique sur une image pour ouvrir la lightox
 for (let i = 0; i < divblocphotounique.length; i++){
     divblocphotounique[i].addEventListener('click', function(event){
-        event.preventDefault();
-        event.stopPropagation();
         openlightbox(event, i);
     })
     divblocphotounique[i].addEventListener('keydown', function(event){
-        if(event.key == 'Enter'){
-            event.preventDefault();
-            event.stopPropagation();
-            openlightbox(event, i);
-        }
-
+        if(event.key == 'Enter') openlightbox(event, i);
     })
 }
 
@@ -314,29 +296,20 @@ function onclicknext(event){
     })
     // test video/image
     if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "no"){
+        isvideo('image')
         imagephotoactuel.src = findvaleurnext.firstChild.firstChild.src;
-        imagephotoactuel.style.display = "flex";
-        imagephotoactuel.ariaLabel = findvaleurnext.ariaLabel
-        videoactuelle.style.display = "none";
-        imagephotoactuel.style.maxHeight = window.innerHeight - 80;
         imagephotoactuel.setAttribute('alt', findvaleurnext.firstChild.ariaLabel)
     }
     if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "yes"){
-        imagephotoactuel.src = "";
+        isvideo('video')
         videoactuelle.src = findvaleurnext.firstChild.firstChild.src.replace('jpg', 'mp4')
-        imagephotoactuel.style.display = "none";
-        videoactuelle.style.display = "flex";
-        videoactuelle.ariaLabel = findvaleurnext.ariaLabel
-        videoactuelle.style.maxHeight = window.innerHeight - 80;
         videoactuelle.setAttribute('title', 'video ' + findvaleurnext.firstChild.ariaLabel)
     }
     // mise à jour de la lightbox
     textephotoactuel.textContent = findvaleurnext.lastChild.firstChild.textContent;
     pointeuractuel += 1;
     previous.style.display = "flex";
-    if (pointeuractuel == (blocphotounique.length - 1)){
-        next.style.display = "none";
-    }
+    if (pointeuractuel == (blocphotounique.length - 1)) next.style.display = "none";
     next.focus();
 }
 function onclickprevious(event){
@@ -348,47 +321,32 @@ function onclickprevious(event){
     })
     // test video/image
     if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "no"){
+        isvideo('image')
         imagephotoactuel.src = findvaleurprevious.firstChild.firstChild.src;
-        imagephotoactuel.style.display = "flex";
-        imagephotoactuel.ariaLabel = findvaleurprevious.ariaLabel
-        videoactuelle.style.display = "none";
-        imagephotoactuel.style.maxHeight = window.innerHeight - 80;
         imagephotoactuel.setAttribute('alt', findvaleurprevious.firstChild.ariaLabel)
     }
     if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "yes"){
-        imagephotoactuel.src = "";
+        isvideo('video')
         videoactuelle.src = findvaleurprevious.firstChild.firstChild.src.replace('jpg', 'mp4')
-        imagephotoactuel.style.display = "none";
-        videoactuelle.style.display = "flex";
-        videoactuelle.ariaLabel = findvaleurprevious.ariaLabel
-        videoactuelle.style.maxHeight = window.innerHeight - 80;
         videoactuelle.setAttribute('alt', 'video : ' + findvaleurprevious.firstChild.ariaLabel)
     }
     // mise à jour de la lightbox
     textephotoactuel.textContent = findvaleurprevious.lastChild.firstChild.textContent;
     pointeuractuel -= 1;
     next.style.display = "flex";
-    if (pointeuractuel == 0){
-        previous.style.display = "none";
-    }
+    if (pointeuractuel == 0) previous.style.display = "none";
     previous.focus();
 }
 
 // Ecoute du click sur les éléments next et previous de la lightbox
 next.addEventListener('keydown', function(event){
-    if(event.key == 'Enter'){
-        onclicknext(event);
-    }
+    if(event.key == 'Enter') onclicknext(event);
 })
 next.addEventListener('click', function(event){
-    console.log('click')
     onclicknext(event);
 })
-
 previous.addEventListener('keydown', function(event){
-    if(event.key == 'Enter'){
-        onclickprevious(event);
-    }
+    if(event.key == 'Enter') onclickprevious(event);
 })
 previous.addEventListener('click', function(event){
     onclickprevious(event);
@@ -421,10 +379,9 @@ let ligneactuelle;
 document.addEventListener('keydown', function(event){
     // Pour fermer le menu deroulant de trie si il perd le focus
     if(event.key == 'Tab' && document.activeElement.id != 'chevronup' && document.activeElement.id != 'date' && document.activeElement.id != 'popularite' && document.activeElement.id != 'titre'){
-        triechoix.style.display = "none";
-        choixactuel.style.display = "flex";    
+        closechoix();    
     }
-    // navigation clavier du modal de contact
+    // navigation clavier du modal de contact, aller a tel ou tel element
     if(event.key == 'Tab' && document.getElementById('modalbg').style.display == "flex"){
         event.preventDefault();
         let textecontrol = document.getElementsByClassName('text-control');
@@ -568,7 +525,6 @@ function trieAffichage(actual){
 }
 
 // définition fonction d'écoute
-
 function ecoutepopularite(){
     trieAffichage('Popularité')
     triParPopularité()
@@ -577,7 +533,6 @@ function ecoutepopularite(){
     titre.style.order = 2;
     date.style.order = 1;
 }
-
 function ecoutetitre() {
     trieAffichage('Titre')
     triParTitre();
@@ -634,7 +589,6 @@ let boutonsjaime = document.getElementsByClassName('iconecoeurclick');
 
 // definition de la fonction pour incrementer et gerer les likes
 function likeadd(event, i){
-    console.log('fonction likeadd appeller')
     // On test si le coeur était déjà cliqué ou non et on change son style en conséquence
     if (boutonsjaime[i].getAttribute('testclick') == "notclicked"){
         let nombreaugmenter = parseInt(like_a_incrementer[i].textContent) + 1;
@@ -652,13 +606,12 @@ function likeadd(event, i){
     }
     // On met à jour la variable contenant le nombre total de j'aimes
     revisionNombreDeJaimes()
-
     // On test si les photos sont actuellement trié par nombre de j'aimes
     if(document.getElementById('trieactuel').textContent == 'Popularité'){
     // si c'est le cas, on met à jour le classement des images par nombre de j'aimes et on s'assure qu'il n'y ait pas de double order
         triParPopularité()
         pasdedouble();
-        // et on va vers l'image sur laquelle on a cliqué car si il y a eu un changement d'ordrel'image peut ne plus être centré
+        // et on va vers l'image sur laquelle on a cliqué car si il y a eu un changement d'ordre l'image peut ne plus être centré
         location.href= '#' + event.path[3].firstChild.firstChild.getAttribute('id');
     }
     boutonsjaime[i].focus();
@@ -667,19 +620,12 @@ function likeadd(event, i){
 // On écoute l'évenement clique sur le coeur cliquable de chaque image
 for (let i = 0; i < boutonsjaime.length; i++){
     boutonsjaime[i].addEventListener('click', function(event){
-        event.preventDefault();
-        event.stopPropagation();
         likeadd(event, i);
     })
-}
-for (let i = 0; i < boutonsjaime.length; i++){
     boutonsjaime[i].addEventListener('keydown', function(event){
-        if(event.key == 'Enter') {
-            event.preventDefault();
-            event.stopPropagation();
-            likeadd(event, i); 
-        }
+        if(event.key == 'Enter') likeadd(event, i); 
     })
 }
 
 // par défaut, les images seront classés par leur nombre de j'aimes
+triParPopularité();
