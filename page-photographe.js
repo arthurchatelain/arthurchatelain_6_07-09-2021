@@ -32,7 +32,7 @@ function HeaderPhotographe(number){
     let photographe = creerbloc('section', 'headerphotographe');
     photographe.setAttribute('data-idPhotographers', data.photographers[number].id)
     let divimg = creerbloc('a', 'divimg');
-    rendreaccessible(divimg, 'photographe ' + prenomduphotographe);
+    rendreaccessible(divimg, 'photographe ' + data.photographers[number].name);
     let image = creerbloc('img', 'imageportrait');
     image.src = './images/photographers/' + data.photographers[number].portrait;
     divimg.appendChild(image); 
@@ -130,9 +130,10 @@ function createBlocImageUnique(type, identity, order){
     let blocphoto = creerbloc('article', 'blocphoto');
     blocphoto.setAttribute('date', imageDeTravail.date)
     blocphoto.style.order = order;
-    blocphoto.tabIndex = order + 2;
     let divimgblocphoto = creerbloc('a', 'divimgblocphoto');
+    divimgblocphoto.ariaLabel = imageDeTravail["alt-text"]
     let imgblocphoto = document.createElement('img');
+    divimgblocphoto.tabIndex = order + 2;
 
     // la partie suivante sert a précharger les images et ainsi pouvoir définir leur height en avance
     // ----------------------------------------------------------------------------------------------
@@ -169,9 +170,11 @@ function createBlocImageUnique(type, identity, order){
     let nomphoto = creerbloc('p', 'nomphoto', imageDeTravail.title);
     let divlikes = creerbloc('div', 'divlikes');
     let nblikes = creerbloc('p', 'nblikes', imageDeTravail.likes);
-    let like = creerbloc('i', 'far fa-heart iconecoeurclick');
+    let like = creerbloc('img', 'iconecoeurclick');
+    like.src = './images/coeurnoir.png'
     like.tabIndex = order + 2;
-    like.setAttribute('testclick', 'notclicked'); 
+    like.ariaLabel = "j'aime"
+    like.setAttribute('testclick', 'notclicked');
     divlikes.append(nblikes, like);
     menuphoto.append(nomphoto, divlikes);
     blocphoto.append(divimgblocphoto, menuphoto);
@@ -220,6 +223,7 @@ function revisionNombreDeJaimes(){
 
 // récupération des élements 
 let blocphoto = document.getElementsByClassName('blocphoto')
+let divblocphotounique = document.getElementsByClassName('divimgblocphoto');
 let blocphotounique = document.getElementsByClassName('imgbloc');
 let imagephotoactuel = document.getElementById('imagephotoactuel');
 let textephotoactuel = document.getElementById('textephotoactuel');
@@ -270,27 +274,32 @@ function openlightbox(event, i){
             videoactuelle.style.display = "flex";
             videoactuelle.src = blocphotounique[i].src.replace('jpg', 'mp4')
             videoactuelle.style.maxHeight = window.innerHeight - 80;
+            videoactuelle.setAttribute('title', 'video ' + divblocphotounique[i].ariaLabel)
         }
         if(blocphotounique[i].getAttribute('video') == "no" ){
             imagephotoactuel.src = blocphotounique[i].src;
             imagephotoactuel.style.display = "flex";
             videoactuelle.style.display = "none";
             imagephotoactuel.style.maxHeight = window.innerHeight - 80;
+            imagephotoactuel.setAttribute('alt', divblocphotounique[i].ariaLabel)
         }
 }
 
 // écoute du clique sur une image pour ouvrir la lightox
-for (let i = 0; i < blocphotounique.length; i++){
-    blocphotounique[i].addEventListener('click', function(event){
+for (let i = 0; i < divblocphotounique.length; i++){
+    divblocphotounique[i].addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopPropagation();
         openlightbox(event, i);
     })
-}
-for (let i = 0; i < blocphoto.length; i++){
-    blocphoto[i].addEventListener("keydown", function(event){
+    divblocphotounique[i].addEventListener('keydown', function(event){
         if(event.key == 'Enter'){
+            event.preventDefault();
+            event.stopPropagation();
             openlightbox(event, i);
         }
-    });
+
+    })
 }
 
 // Fonctionnalité de navigation au click sur les élement previous et next de la lightbox
@@ -307,15 +316,19 @@ function onclicknext(event){
     if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "no"){
         imagephotoactuel.src = findvaleurnext.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
+        imagephotoactuel.ariaLabel = findvaleurnext.ariaLabel
         videoactuelle.style.display = "none";
         imagephotoactuel.style.maxHeight = window.innerHeight - 80;
+        imagephotoactuel.setAttribute('alt', findvaleurnext.firstChild.ariaLabel)
     }
     if (findvaleurnext.firstChild.firstChild.getAttribute('video') == "yes"){
         imagephotoactuel.src = "";
         videoactuelle.src = findvaleurnext.firstChild.firstChild.src.replace('jpg', 'mp4')
         imagephotoactuel.style.display = "none";
         videoactuelle.style.display = "flex";
+        videoactuelle.ariaLabel = findvaleurnext.ariaLabel
         videoactuelle.style.maxHeight = window.innerHeight - 80;
+        videoactuelle.setAttribute('title', 'video ' + findvaleurnext.firstChild.ariaLabel)
     }
     // mise à jour de la lightbox
     textephotoactuel.textContent = findvaleurnext.lastChild.firstChild.textContent;
@@ -324,6 +337,7 @@ function onclicknext(event){
     if (pointeuractuel == (blocphotounique.length - 1)){
         next.style.display = "none";
     }
+    next.focus();
 }
 function onclickprevious(event){
     event.stopPropagation();
@@ -336,15 +350,19 @@ function onclickprevious(event){
     if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "no"){
         imagephotoactuel.src = findvaleurprevious.firstChild.firstChild.src;
         imagephotoactuel.style.display = "flex";
+        imagephotoactuel.ariaLabel = findvaleurprevious.ariaLabel
         videoactuelle.style.display = "none";
         imagephotoactuel.style.maxHeight = window.innerHeight - 80;
+        imagephotoactuel.setAttribute('alt', findvaleurprevious.firstChild.ariaLabel)
     }
     if (findvaleurprevious.firstChild.firstChild.getAttribute('video') == "yes"){
         imagephotoactuel.src = "";
         videoactuelle.src = findvaleurprevious.firstChild.firstChild.src.replace('jpg', 'mp4')
         imagephotoactuel.style.display = "none";
         videoactuelle.style.display = "flex";
+        videoactuelle.ariaLabel = findvaleurprevious.ariaLabel
         videoactuelle.style.maxHeight = window.innerHeight - 80;
+        videoactuelle.setAttribute('alt', 'video : ' + findvaleurprevious.firstChild.ariaLabel)
     }
     // mise à jour de la lightbox
     textephotoactuel.textContent = findvaleurprevious.lastChild.firstChild.textContent;
@@ -353,6 +371,7 @@ function onclickprevious(event){
     if (pointeuractuel == 0){
         previous.style.display = "none";
     }
+    previous.focus();
 }
 
 // Ecoute du click sur les éléments next et previous de la lightbox
@@ -362,6 +381,7 @@ next.addEventListener('keydown', function(event){
     }
 })
 next.addEventListener('click', function(event){
+    console.log('click')
     onclicknext(event);
 })
 
@@ -384,19 +404,15 @@ let chevronup = document.getElementById('chevronup');
 
 // définition fonction choixactuel activer/désactiver
 function openchoix(event){
-    event.preventDefault();
-    event.stopPropagation();
     triechoix.style.display = "flex";
     choixactuel.style.display = "none";
 }
 function closechoix(event){
-    event.preventDefault();
-    event.stopPropagation();
     triechoix.style.display = "none";
     choixactuel.style.display = "flex";
 }
 
-// Menu deroulant et ouverture du mdoal de contact + navif=gation clavier dans le modal
+// Menu deroulant et ouverture du mdoal de contact + navigation clavier dans le modal
 
 // definition de la variable pointant sur le contact actuel
 let ligneactuelle;
@@ -434,24 +450,25 @@ document.addEventListener('keydown', function(event){
 // écoute du click pour ouvrir le module de choix
 choixactuel.addEventListener('click', function(event){
     openchoix(event);
+    document.getElementById('chevronup').focus()
 })
-
 choixactuel.addEventListener('keydown', function(event){
     if(event.key == 'Enter'){
         openchoix(event);
-        chevronup.focus();
-    }
+        document.getElementById('chevronup').focus()
+    }    
 })
 
 // écoute du click pour fermer le module de choix
 chevronup.addEventListener('click', function(event){
     closechoix(event);
+    document.getElementById('choixactuel').focus()
 })
 chevronup.addEventListener('keydown', function(event){
     if(event.key == 'Enter'){
         closechoix(event);
         document.getElementById('choixactuel').focus()
-    }
+    }    
 })
 
 // définition des éléments nécessaires pour les fonctions et les écoute des évenements à suivre
@@ -461,7 +478,7 @@ let popularite = document.getElementById('popularite');
 let titre = document.getElementById('titrechoix');
 let date = document.getElementById('date');
 
-// On utilise cette fonction dans la fonctiond de trie par popularité pour pouvoir trier un tableau par ordre croissant 
+// On utilise cette fonction dans la fonction de trie par popularité pour pouvoir trier un tableau par ordre croissant 
 function compare(x, y) {
     return x - y;
 }
@@ -494,7 +511,8 @@ function triParPopularité(){
         for(let i=0; i < blocphoto.length; i++){
             if(blocphoto[i].lastChild.lastChild.firstChild.textContent == valeur){
                 blocphoto[i].style.order = index;
-                blocphoto[i].tabIndex = index + 2;
+                blocphoto[i].firstChild.tabIndex = index + 2;
+                document.getElementsByClassName('iconecoeurclick')[i].tabIndex = blocphoto[i].firstChild.tabIndex;
             }
         }
     })
@@ -510,7 +528,8 @@ function triParTitre(){
         for(let i=0; i < blocphoto.length; i++){
             if(blocphoto[i].lastChild.firstChild.textContent == valeur){
                 blocphoto[i].style.order = index;
-                blocphoto[i].tabIndex = index + 2;
+                blocphoto[i].firstChild.tabIndex = index + 2;
+                document.getElementsByClassName('iconecoeurclick')[i].tabIndex = blocphoto[i].firstChildtabIndex;
             }
         }
     })
@@ -526,7 +545,8 @@ function triParDate(){
         for(let i=0; i < blocphoto.length; i++){
             if(blocphoto[i].getAttribute('date').replace('-', '').replace('-', '') == valeur){
                 blocphoto[i].style.order = index;
-                blocphoto[i].tabIndex = index + 2;
+                blocphoto[i].firstChild.tabIndex = index + 2;
+                document.getElementsByClassName('iconecoeurclick')[i].tabIndex = blocphoto[i].firstChild.tabIndex;
             }
         }
     })
@@ -612,35 +632,54 @@ date.addEventListener('keydown', function(event){
 let like_a_incrementer = document.getElementsByClassName('nblikes');
 let boutonsjaime = document.getElementsByClassName('iconecoeurclick');
 
+// definition de la fonction pour incrementer et gerer les likes
+function likeadd(event, i){
+    console.log('fonction likeadd appeller')
+    // On test si le coeur était déjà cliqué ou non et on change son style en conséquence
+    if (boutonsjaime[i].getAttribute('testclick') == "notclicked"){
+        let nombreaugmenter = parseInt(like_a_incrementer[i].textContent) + 1;
+        like_a_incrementer[i].textContent = nombreaugmenter;
+        boutonsjaime[i].setAttribute('testclick', 'clicked')
+        boutonsjaime[i].src = './images/coeurrouge.png';
+        boutonsjaime[i].ariaLabel = 'bouton Jaime actif'
+    }
+    else {
+        let nombrediminuer = parseInt(like_a_incrementer[i].textContent) - 1;
+        like_a_incrementer[i].textContent = nombrediminuer;
+        boutonsjaime[i].setAttribute('testclick', 'notclicked')
+        boutonsjaime[i].src = './images/coeurnoir.png';
+        boutonsjaime[i].ariaLabel = 'bouton Jaime'
+    }
+    // On met à jour la variable contenant le nombre total de j'aimes
+    revisionNombreDeJaimes()
+
+    // On test si les photos sont actuellement trié par nombre de j'aimes
+    if(document.getElementById('trieactuel').textContent == 'Popularité'){
+    // si c'est le cas, on met à jour le classement des images par nombre de j'aimes et on s'assure qu'il n'y ait pas de double order
+        triParPopularité()
+        pasdedouble();
+        // et on va vers l'image sur laquelle on a cliqué car si il y a eu un changement d'ordrel'image peut ne plus être centré
+        location.href= '#' + event.path[3].firstChild.firstChild.getAttribute('id');
+    }
+    boutonsjaime[i].focus();
+}
+
 // On écoute l'évenement clique sur le coeur cliquable de chaque image
 for (let i = 0; i < boutonsjaime.length; i++){
     boutonsjaime[i].addEventListener('click', function(event){
-        // On test si le coeur était déjà cliqué ou non et on change son style en conséquence
-        if (boutonsjaime[i].getAttribute('testclick') == "notclicked"){
-            let nombreaugmenter = parseInt(like_a_incrementer[i].textContent) + 1;
-            like_a_incrementer[i].textContent = nombreaugmenter;
-            boutonsjaime[i].setAttribute('testclick', 'clicked')
-            boutonsjaime[i].style.fontWeight = '800';
+        event.preventDefault();
+        event.stopPropagation();
+        likeadd(event, i);
+    })
+}
+for (let i = 0; i < boutonsjaime.length; i++){
+    boutonsjaime[i].addEventListener('keydown', function(event){
+        if(event.key == 'Enter') {
+            event.preventDefault();
+            event.stopPropagation();
+            likeadd(event, i); 
         }
-        else {
-            let nombrediminuer = parseInt(like_a_incrementer[i].textContent) - 1;
-            like_a_incrementer[i].textContent = nombrediminuer;
-            boutonsjaime[i].setAttribute('testclick', 'notclicked')
-            boutonsjaime[i].style.fontWeight = '400';
-        }
-        // On met à jour la variable contenant le nombre total de j'aimes
-        revisionNombreDeJaimes()
-
-        // On test si les photos sont actuellement trié par nombre de j'aimes
-        if(document.getElementById('trieactuel').textContent == 'Popularité'){
-        // si c'est le cas, on met à jour le classement des images par nombre de j'aimes et on s'assure qu'il n'y ait pas de double order
-            triParPopularité()
-            pasdedouble();
-            // et on va vers l'image sur laquelle on a cliqué car si il y a eu un changement d'ordrel'image peut ne plus être centré
-            location.href= '#' + event.path[3].firstChild.firstChild.getAttribute('id');
-        }
-    }
-);}
+    })
+}
 
 // par défaut, les images seront classés par leur nombre de j'aimes
-triParPopularité()

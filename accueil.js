@@ -24,7 +24,7 @@ function createHeader(){
         createtag.className = "tag tagclick";
         createtag.textContent = "#" + item;
         createtag.tabIndex = "inherit";
-        createtag.ariaLabel = item;
+        createtag.ariaLabel = 'tag ' + item;
         nav.appendChild(createtag);
     })
     header.appendChild(nav);
@@ -91,10 +91,12 @@ for (let i = 0; i < taglist.length; i++) {
     })
     // fonctionnalités click
     taglist[i].addEventListener('click', function(){
+        console.log('appeller')
         if (tagclicked[i] == 0){
             taglist[i].style.backgroundColor = '#901C1C';
             taglist[i].style.color = 'white';
             tagclicked[i] = 1;
+            taglist[i].ariaLabel = 'tag ' + taglist[i].textContent.substr(1) + ' actif'
             tagneeded[i] = taglist[i].textContent;
             tagmanagement(tagneeded);
         }
@@ -103,6 +105,7 @@ for (let i = 0; i < taglist.length; i++) {
             taglist[i].style.color = '#901C1C'
             tagclicked[i] = 0;
             tagneeded[i] = 0;
+            taglist[i].ariaLabel = 'tag' + taglist[i].textContent.substr(1)
             tagmanagement(tagneeded);
         }
     });

@@ -8,21 +8,21 @@
     </head>
     <body>
         <header id="header">
-            <a href="index.html" class="lienlogo" tabindex="1"><img src="images/logo.png" alt="FishEye Home Page" class="imglogo"></a>
+            <a href="index.html" class="lienlogo" tabindex="1"><img src="images/logo.png" alt="Retour à la page d'acceuil" class="imglogo"></a>
         </header>
         <main id="main">
           <section id="headermain"></section>
           <section id="trie">
             <p id="textetrie">Trier par</p>
-            <a id="choixactuel" aria-label="trier par" tabindex="1">
+            <a id="choixactuel" aria-label="ouvrir le menu de choix du trie des images" tabindex="1">
               <span id="trieactuel">Popularité</span>
               <i class="fas fa-chevron-down"></i>
             </a>
             <div id="triechoix">
-              <i class="fas fa-chevron-up" id="chevronup" tabindex="1"></i>
-              <span class="choix choixdroit" id="popularite" tabindex="1">Popularité</span>
-              <span class="choix choixdroit" id="date" tabindex="1">Date</span>
-              <span class="choix" id="titrechoix" tabindex="1">Titre</span>
+              <i class="fas fa-chevron-up" id="chevronup" tabindex="1" aria-label="fermer le menu de trie"></i>
+              <span class="choix choixdroit" id="popularite" tabindex="1" aria-label="trier par popularité">Popularité</span>
+              <span class="choix choixdroit" id="date" tabindex="1" aria-label="trier par date">Date</span>
+              <span class="choix" id="titrechoix" tabindex="1" aria-label="trier par titre">Titre</span>
             </div>
           </section>
           <section id="modalimagebg">
@@ -30,9 +30,9 @@
               <img id="imagephotoactuel" src="" alt="" tabindex="1">
               <video controls src="" id="videoactuelle" tabindex="1"></video>
               <p id="textephotoactuel"></p>
-              <i class="fas fa-chevron-left" id="previous" tabindex="1"></i>
-              <i class="fas fa-chevron-right" id="next" tabindex="1"></i>
-              <i class="fas fa-times" id="modalimageclose" tabindex="1"></i>
+              <img src="./images/chevronprevious.png" id="previous" tabindex="1" alt="aller à l'image précédente"></i>
+              <img src="./images/chevronnext.png" id="next" tabindex="1" alt="aller a l'image suivante"></i>
+              <img src="./images/croix.png" id="modalimageclose" tabindex="1" alt="fermer la lightbox"></i>
             </div>
           </section>
             <section id="modalbg">

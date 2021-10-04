@@ -127,6 +127,14 @@ header .imglogo {
   justify-content: center;
 }
 
+.iconecoeurclick {
+  width: 19px;
+  height: 19px;
+  position: relative;
+  top: 1.7px;
+  right: 1.5px;
+}
+
 #modalclose::after, #modalclose::before {
   position: absolute;
   left: 15px;
@@ -331,6 +339,7 @@ textarea:focus, input:focus {
   font-size: xxx-large;
   padding-left: 65px;
   color: #901C1C;
+  width: 30px;
 }
 #modalimagebg #next {
   position: absolute;
@@ -339,28 +348,7 @@ textarea:focus, input:focus {
   font-size: xxx-large;
   padding-right: 65px;
   color: #901C1C;
-}
-
-.modalimageclose::after, .modalimageclose::before {
-  position: absolute;
-  top: 70px;
-  right: 70px;
-  content: " ";
-  height: 42px;
-  width: 6px;
-  background-color: #901C1C;
-}
-
-.modalimageclose::after {
-  transform: rotate(45deg);
-}
-
-.modalimageclose::before {
-  transform: rotate(-45deg);
-}
-
-.modalimageclose:hover {
-  cursor: pointer;
+  width: 30px;
 }
 
 #divmodalimage {
@@ -446,6 +434,7 @@ textarea:focus, input:focus {
   top: 60px;
   font-size: xxx-large;
   cursor: pointer;
+  width: 35px;
 }
 
 #choixactuel {

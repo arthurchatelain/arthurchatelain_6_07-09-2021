@@ -135,6 +135,14 @@ header {
     
   }
 
+.iconecoeurclick {
+    width: 19px;
+    height: 19px;
+    position: relative;
+    top: 1.70px;
+    right: 1.5px;
+}
+
 #modalclose::after, #modalclose::before {
     position: absolute;
     left: 15px;
@@ -326,6 +334,7 @@ textarea:focus, input:focus {
         font-size: xxx-large;
         padding-left: 65px;
         color: $couleurprimary;
+        width: 30px;
     }
     #next {
         position: absolute;
@@ -334,27 +343,8 @@ textarea:focus, input:focus {
         font-size: xxx-large;
         padding-right: 65px;
         color: $couleurprimary;
+        width: 30px;
     }
-}
-.modalimageclose::after, .modalimageclose::before {
-    position: absolute;
-    top: 70px;
-    right: 70px;
-    content: " ";
-    height: 42px;
-    width: 6px;
-    background-color: $couleurprimary;
-}
-
-.modalimageclose::after {
-    transform: rotate(45deg);
-}
-.modalimageclose::before {
-    transform: rotate(-45deg);
-}
-
-.modalimageclose:hover {
-    cursor: pointer; 
 }
 #divmodalimage {
     display: flex;
@@ -433,6 +423,7 @@ textarea:focus, input:focus {
     top: 60px;
     font-size: xxx-large;
     cursor: pointer;
+    width: 35px;
 }
 #choixactuel {
     background-color: $couleurprimary;
