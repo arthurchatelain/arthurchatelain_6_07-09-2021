@@ -116,6 +116,17 @@ document.getElementById('btn-submit').addEventListener('click', function(e) {
 // déclaration de la variable définnissant l'ordre de chaque images  
 let orderphoto = 0
 
+// Fonction qui creer un blocphoto ou video en fonction du type de media
+function imageOuVideo(typeimage, imgblocphoto, img, prenomduphotographe, fileName){
+    imgblocphoto.src = './images/' + prenomduphotographe + '/' + fileName
+    let className = typeimage == 'video' ? 'imgvideoblocphoto' : 'imgblocphoto'
+    imgblocphoto.className = 'imgbloc ' + className
+    let mediaType = typeimage == 'video' ? 'yes' : 'no'
+    imgblocphoto.setAttribute('video', mediaType)
+    // src de l'image en préchargement 
+    img.src = './images/' + prenomduphotographe + '/' + fileName
+}
+
 // déclaration de la fonction factory pour créer un bloc image unique
 function createBlocImageUnique(type, identity, order){
     let imageDeTravail = data.media.find(x => x.id == identity)
@@ -139,21 +150,8 @@ function createBlocImageUnique(type, identity, order){
     }
     // ----------------------------------------------------------------------------------------------
 
-    // on regarde le type du media pour faire un replace si video
-    if(type == 'image'){
-        imgblocphoto.src = './images/' + prenomduphotographe + '/' + imageDeTravail.image
-        imgblocphoto.className = 'imgbloc imgblocphoto'
-        imgblocphoto.setAttribute('video', 'no')
-        // src de l'image en préchargement 
-        img.src = './images/' + prenomduphotographe + '/' + imageDeTravail.image
-    }  
-    if(type == 'video'){
-        imgblocphoto.src = './images/' + prenomduphotographe + '/' +imageDeTravail.video.replace('mp4','jpg')
-        imgblocphoto.className = 'imgbloc imgvideoblocphoto'
-        imgblocphoto.setAttribute('video', 'yes')
-        // src de l'image en préchargement 
-        img.src = './images/' + prenomduphotographe + '/' + imageDeTravail.video.replace('mp4','jpg')
-    }
+    let fileName = type == 'image' ? imageDeTravail.image : imageDeTravail.video.replace('mp4','jpg')
+    imageOuVideo(type, imgblocphoto, img, prenomduphotographe, fileName)
     imgblocphoto.setAttribute('id', identity)
     divimgblocphoto.appendChild(imgblocphoto)
     let menuphoto = creerbloc('article', 'menuphoto')
@@ -173,9 +171,7 @@ function createBlocImageUnique(type, identity, order){
 
 // creation des blocs pour chaque photos en utilisant la fonction factory
 data.media.filter(element => element.photographerId == idduphotographe).forEach(function(item){
-    let type
-    if(item.image != undefined) type = 'image'
-    else type = 'video'
+    let type = item.image != undefined ? 'image' : 'video'
     createBlocImageUnique(type, item.id, orderphoto)
     orderphoto += 1
 })
@@ -629,3 +625,13 @@ for (let i = 0; i < boutonsjaime.length; i++){
 
 // par défaut, les images seront classés par leur nombre de j'aimes
 triParPopularité()
+
+// Ces lignes permettent la navigation graçe aux flèches du clavier
+window.addEventListener('keydown', function(e){
+    if(e.key == 'ArrowLeft' && document.getElementById('modalimagebg').style.display == 'flex' && document.getElementById('previous').style.display == 'flex'){
+        onclickprevious(e)
+    }
+    if(e.key == 'ArrowRight' && document.getElementById('modalimagebg').style.display == 'flex' && document.getElementById('next').style.display == 'flex'){
+        onclicknext(e)
+    }
+})
