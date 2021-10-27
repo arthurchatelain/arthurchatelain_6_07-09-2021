@@ -198,7 +198,7 @@ header {
     }
     input {
         display: block;
-        width: 100%;
+        width: -webkit-fill-available;
         font-size: x-large;
         border: none;
         padding: 8px;
@@ -206,7 +206,7 @@ header {
     }
     textarea {
         display: block;
-        width: 100%;
+        width: -webkit-fill-available;
         font-size: x-large;
         resize: none;
         border: none;

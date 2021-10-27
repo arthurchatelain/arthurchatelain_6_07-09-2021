@@ -89,11 +89,23 @@ function CloseModalImage() {
 
 // fonction de soumission du formulaire et d'affichage des réponses dans la console
 function submit() {
-    console.log('Prénom : ' + document.getElementById('first').value)
-    console.log('Nom : ' + document.getElementById('last').value)
-    console.log('Email : ' + document.getElementById('email').value)
-    console.log('Message : ' + document.getElementById('message').value)
-    modalbg.style.display = 'none'
+    let first = document.getElementById('first').value
+    let last = document.getElementById('last').value
+    let email = document.getElementById('email').value
+    let message = document.getElementById('message').value
+    // On s'assure que les champs sont valides
+    if (!/^[A-Za-z]{1,}$/.test(first)) alert('Prénom invalide')
+    else if (!/^[A-Za-z]{1,}$/.test(last)) alert('Nom invalide')
+    else if (!/^[A-Za-z0-9]{1,}@[a-z]{1,}\.[a-z]{1,}$/.test(email)) alert('Email invalide')
+    else if (!/^[A-Za-z]{1,}$/.test(message)) alert('Message invalide')
+    else {
+        console.log('Prénom : ' + first)
+        console.log('Nom : ' + last)
+        console.log('Email : ' + email)
+        console.log('Message : ' + message)
+        modalbg.style.display = 'none'  
+    }
+    
 }
 
 // écoutes d'evenement pour l'ouverture et la femeture des modals
